@@ -8,6 +8,8 @@
 		_PFadeDistance("FadeDistance", Float) = 10
 		_PEdgeSoftness("EdgeSoftness", Float) = 5
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
+    _Frequency("Frequency", Range(0, 200)) = 200
+    _Intensity("Intensity", Range(0, 10)) = 1
 		
 		_RimColor("Rim Color", Color) = (1,1,1,1)
 		_RimPower("Rim Power", Range(0.5, 8.0)) = 1.059702
@@ -41,6 +43,8 @@
       half _PFadeDistance;
       half _PEdgeSoftness;
       float4 _Origin;
+      half _Frequency;
+      half _Intensity;
       
       float4 _RimColor;
       float _RimPower;
@@ -59,15 +63,15 @@
 				color.a = 1;
 				dis = distance(IN.worldPos, _Origin);
 
-				half normDist = 1 - (distance(_PDistance, _Origin) / 100);
+				half fade = 1 - (distance(_PDistance, _Origin) / _Frequency);
 
-				if (normDist < 0) {
-					normDist = 0;
-				} else if (normDist > 1) {
-					normDist = 1;
+				if (fade < 0) {
+					fade = 0;
+				} else if (fade > 1) {
+					fade = 1;
 				}
 
-				color.rgb = color.rgb * normDist * (1 - saturate(abs(_PDistance - dis) / _PFadeDistance));
+				color.rgb = color.rgb * fade * _Intensity * (1 - saturate(abs(_PDistance - dis) / _PFadeDistance));
       }
       
       void surf (Input IN, inout SurfaceOutput o) {

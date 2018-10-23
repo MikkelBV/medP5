@@ -330,10 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pulseMaterial: {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
-  mainTexture: {fileID: 2800000, guid: e843a3cb19b108d479a165e848ea403a, type: 3}
-  normalMap: {fileID: 2800000, guid: fa55af6c4f36961408713b6efddccf9c, type: 3}
-  isTarget: 0
-  rends: []
+  thisRenderer: {fileID: 0}
 --- !u!1 &1929207465
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,5 +468,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2a24e512038bb49a2a5c9808bad02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeOut: 0
-  distMult: 8
+  speed: 8
