@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PulseVisualizer : MonoBehaviour {
 	public Material pulseMaterial;
+	public Texture2D normalMap;
 
 	[HideInInspector]
 	public Renderer thisRenderer;
@@ -18,6 +19,7 @@ public class PulseVisualizer : MonoBehaviour {
 				thisRenderer.material.SetFloat("_RimPower", 0.6f);
 				thisRenderer.material.SetColor("_Color", Color.yellow);
 				thisRenderer.material.SetColor("_RimColor", Color.red);
+				thisRenderer.material.SetTexture("_BumpMap", normalMap);
 				break;
 			case "Water":
 				thisRenderer.material.SetFloat("_RimOn", 0);
