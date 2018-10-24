@@ -8,8 +8,8 @@
 		_PFadeDistance("FadeDistance", Float) = 10
 		_PEdgeSoftness("EdgeSoftness", Float) = 5
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
-    _Frequency("Frequency", Range(0, 200)) = 200
-    _Intensity("Intensity", Range(0, 10)) = 1
+    _Frequency("Frequency", Range(0, 50)) = 50
+    _Intensity("Intensity", Range(0, 10)) = 0
 		
 		_RimColor("Rim Color", Color) = (1,1,1,1)
 		_RimPower("Rim Power", Range(0.5, 8.0)) = 1.059702
@@ -27,7 +27,7 @@
       CGPROGRAM
 
       // define finalcolor and vertex programs:
-      #pragma surface surf Lambert finalcolor:mycolor vertex:myvert
+      #pragma surface surf Lambert finalcolor:color vertex:vert
       struct Input {
           float2 uv_MainTex;
           float2 uv_BumpMap;
@@ -50,11 +50,11 @@
       float _RimPower;
       float _RimOn;
 
-      void myvert (inout appdata_full v, out Input data) {
+      void vert (inout appdata_full v, out Input data) {
       	UNITY_INITIALIZE_OUTPUT(Input, data);
       }
       
-      void mycolor (Input IN, SurfaceOutput o, inout fixed4 color) {
+      void color (Input IN, SurfaceOutput o, inout fixed4 color) {
 				half dis;
 				half interval;
 				half origin;
@@ -63,7 +63,7 @@
 				color.a = 1;
 				dis = distance(IN.worldPos, _Origin);
 
-				half fade = 1 - (distance(_PDistance, _Origin) / _Frequency);
+				half fade = 1 - (_PDistance / _Frequency);//(distance(_PDistance, _Origin) / _Frequency);
 
 				if (fade < 0) {
 					fade = 0;

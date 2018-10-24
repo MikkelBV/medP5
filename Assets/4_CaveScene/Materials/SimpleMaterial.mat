@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SimpleMaterial
   m_Shader: {fileID: 4800000, guid: 645ce0a54bfb35d469012ff57c731ea3, type: 3}
@@ -29,7 +29,7 @@ Material:
     m_Floats:
     - _Frequency: 200
     - _HiY: -2.19
-    - _Intensity: 10
+    - _Intensity: 0
     - _LoY: 2
     - _PDistance: 7.170069
     - _PEdgeSoftness: 5
