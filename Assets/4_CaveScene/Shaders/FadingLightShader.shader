@@ -1,4 +1,4 @@
-﻿Shader "Unlit/FadingShader"
+﻿Shader "Unlit/FadingLightShader"
 {
 	Properties {
 		_MainTex ("Base (RGB) Trans (A)", 2D) = "blue" {}
@@ -53,29 +53,22 @@
       
       void color (Input IN, SurfaceOutput o, inout fixed4 color) {
 				half dis;
+				fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 
 				color.a = 1;
 				dis = distance(IN.worldPos, _Origin);
 
 				half fade = 1 - (_PDistance / _Frequency);
 
-				if (fade < 0) {
-					fade = 0;
-				} else if (fade > 1) {
-					fade = 1;
+        if (fade > 0 && fade < 1 ) {
+				  color.rgb = color.rgb + (c.rgb * fade * _Intensity * (1 - saturate(abs(_PDistance - dis) / _PFadeDistance)));
 				}
-				color.rgb = color.rgb * fade * _Intensity * (1 - saturate(abs(_PDistance - dis) / _PFadeDistance));
       }
       
       void surf (Input IN, inout SurfaceOutput o) {
-				fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-
+				fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
 				o.Albedo = c.rgb;
 				o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
-        if(_RimOn > 0) {
-					half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
-					o.Emission = _RimColor.rgb * pow(rim, _RimPower);
-				}
       }
       ENDCG
     } 
