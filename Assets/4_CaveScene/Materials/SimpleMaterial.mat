@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SimpleMaterial
-  m_Shader: {fileID: 4800000, guid: 645ce0a54bfb35d469012ff57c731ea3, type: 3}
+  m_Shader: {fileID: 4800000, guid: 84d2ba543c799a3478c138918a4afcb6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
