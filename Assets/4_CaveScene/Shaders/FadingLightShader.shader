@@ -1,7 +1,7 @@
 ﻿Shader "Unlit/FadingLightShader"
 {
 	Properties {
-		_MainTex ("Base (RGB) Trans (A)", 2D) = "blue" {}
+		_MainTex ("Base (RGB) Trans (A)", 2D) = "gray" {}
 		_BumpMap ("Normalmap", 2D) = "bump" {}
 		_Color ("Color", Color) = (1, 0, 0, 1)
 		_PDistance("PulseDistance", Float) = 0
