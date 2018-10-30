@@ -521,6 +521,7 @@ GameObject:
   - component: {fileID: 1929207467}
   - component: {fileID: 1929207466}
   - component: {fileID: 1929207472}
+  - component: {fileID: 1929207473}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -535,7 +536,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1929207465}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1dbf502383deba45963bd1cf5dcb282, type: 3}
   m_Name: 
@@ -554,7 +555,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 10
   m_AngularDrag: 100
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -645,6 +646,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
+--- !u!114 &1929207473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1929207465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d23acf4202a64f48bf7fceb45f34b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 10
+  moveSpeed: 10
 --- !u!1001 &1971725277
 Prefab:
   m_ObjectHideFlags: 0
