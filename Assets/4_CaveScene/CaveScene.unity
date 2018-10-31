@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pulseMaterial: {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
-  normalMap: {fileID: 0}
+  normalMap: {fileID: 2800000, guid: bcb1afdcd5fece941a47c0fdf59083cc, type: 3}
   thisRenderer: {fileID: 0}
 --- !u!1 &409974010
 GameObject:
