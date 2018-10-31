@@ -1,43 +1,15 @@
 fileFormatVersion: 2
-guid: e94a88841bcdcc34d8f4f4f8c8e3c4b6
-timeCreated: 1540978879
+guid: ec7ed5fe72d97ec4eb8506ec0dc7805e
+timeCreated: 1540980256
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Entrance:Entrance1:Entrance:pCube3
-    100004: Large_Segment:pCube1
-    100006: Large_Segment:pCube2
-    100008: Large_Segment:transform1
-    100010: Large_Segment:transform2
-    100012: pTorus3
-    100014: pTorus4
-    100016: pTorus5
-    100018: transform1
-    100020: transform2
-    100022: transform3
-    100024: transform4
-    100026: Tunnel_Left:pTorus4
     400000: //RootNode
-    400002: Entrance:Entrance1:Entrance:pCube3
-    400004: Large_Segment:pCube1
-    400006: Large_Segment:pCube2
-    400008: Large_Segment:transform1
-    400010: Large_Segment:transform2
-    400012: pTorus3
-    400014: pTorus4
-    400016: pTorus5
-    400018: transform1
-    400020: transform2
-    400022: transform3
-    400024: transform4
-    400026: Tunnel_Left:pTorus4
-    2300000: Large_Segment:pCube2
-    3300000: Large_Segment:pCube2
-    4300000: Large_Segment:pCube2
-    6400000: Large_Segment:pCube2
-    7400000: Take 001
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cave_whole
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -67,7 +39,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
