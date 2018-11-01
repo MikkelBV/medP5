@@ -17,12 +17,12 @@
 	}
     
     SubShader {
-		  Tags { "RenderType"="Opaque" }      
+		  Tags { "LightMode"="ForwardBase" }      
       LOD 200
 
       CGPROGRAM
 
-      #pragma surface surf Lambert vertex:vert fullforwardshadows finalcolor:color
+      #pragma surface surf Lambert vertex vert fullforwardshadows finalcolor color
       #pragma target 3.0
 
       struct Input {
@@ -49,6 +49,10 @@
 
       void vert (inout appdata_full v, out Input data) {
       	UNITY_INITIALIZE_OUTPUT(Input, data);
+      }
+
+      void frag() {
+        
       }
       
       void color (Input IN, SurfaceOutput o, inout fixed4 color) {

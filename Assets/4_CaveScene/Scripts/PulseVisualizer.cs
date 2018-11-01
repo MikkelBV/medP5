@@ -14,6 +14,6 @@ public class PulseVisualizer : MonoBehaviour {
 	}
 	
 	void Update () {
-		thisRenderer.material.SetFloat("_PDistance", PulseEmitter.distance);
+		thisRenderer.material.SetFloat("_Distance", PulseEmitter.distance);
 	}
 }
