@@ -1,5 +1,4 @@
-﻿Shader "Unlit/FadingLightShader"
-{
+﻿Shader "Unlit/FadingLightShader" {
 	Properties {
 		_MainTex ("Base (RGB) Trans (A)", 2D) = "gray" {}
 		_BumpMap ("Normalmap", 2D) = "bump" {}
@@ -47,11 +46,11 @@
       float _RimPower;
       float _RimOn;
 
-      void vert (inout appdata_full v, out Input data) {
+      void vert(inout appdata_full v, out Input data) {
       	UNITY_INITIALIZE_OUTPUT(Input, data);
       }
       
-      void color (Input IN, SurfaceOutput o, inout fixed4 color) {
+      void color(Input IN, SurfaceOutput o, inout fixed4 color) {
 				half dis;
 				fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 
@@ -65,7 +64,7 @@
 				}
       }
       
-      void surf (Input IN, inout SurfaceOutput o) {
+      void surf(Input IN, inout SurfaceOutput o) {
 				fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
 				o.Albedo = c.rgb;
 				o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
