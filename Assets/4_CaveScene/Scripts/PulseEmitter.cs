@@ -6,7 +6,7 @@ public class PulseEmitter : MonoBehaviour {
 	public static float fadeDistance;
 	public static float edgeSoftness;
 
-	public int speed = 8;
+	public int speed = 25;
 
 	void Start () {
 		fadeDistance = 5f;
@@ -17,9 +17,9 @@ public class PulseEmitter : MonoBehaviour {
 		distance += speed * Time.deltaTime;
 
 		if (Input.GetMouseButtonDown(0)){
-			EmitSound(50f, 0.3f);
+			EmitSound(100f, 0.4f);
 		} else if (Input.GetMouseButtonDown(1)) {
-			EmitSound(12, 8f);
+			EmitSound(20f, 2f);
 		}
 	}
 

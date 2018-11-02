@@ -5,9 +5,9 @@ Shader "Unlit/PulseUnlitShader" {
 		_MainTex ("Texture", 2D) = "white" {}
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
-    _Frequency("Frequency", Range(0, 50)) = 50
-    _Intensity("Intensity", Range(0, 10)) = 1
-		_Color("Color", Color) = (1, 0, 0, 1)
+    	_Frequency("Frequency", Range(0, 50)) = 50
+   		_Intensity("Intensity", Range(0, 10)) = 1
+		_Color("Color", Color) = (1, 1, 1, 1)
 		_Width("PulseWidth", Float) = 5
 	}
 	SubShader {
