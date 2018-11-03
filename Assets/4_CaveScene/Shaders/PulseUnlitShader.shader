@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "Unlit/PulseUnlitShader" {
+﻿Shader "Unlit/PulseUnlitShader" {
 	Properties {
 		_MainTex ("Texture", 2D) = "white" {}
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
@@ -15,6 +13,7 @@ Shader "Unlit/PulseUnlitShader" {
 		LOD 100
 
 		Pass {
+			Tags { "LightMode"="ForwardAdd" }
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -25,7 +24,6 @@ Shader "Unlit/PulseUnlitShader" {
 				float2 uv : TEXCOORD0;
 				float3 normal : NORMAL;
 			};
-
 			struct v2f {
 				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
@@ -42,25 +40,52 @@ Shader "Unlit/PulseUnlitShader" {
 			half _Width;
 			
 			v2f vert (appdata v) {
-				float3 worldPos = mul (unity_ObjectToWorld, v.vertex).xyz;			
-				half dis = distance(worldPos, _Origin);
-				half fade = saturate(1 - (_Distance / _Frequency));
-				
-				float4 c = _Color
-									* fade 
-									* _Intensity
-									* (1 - saturate(abs(_Distance - dis) / _Width));
+				float4x4 modelMatrix = unity_ObjectToWorld;
+				float3x3 modelMatrixInverse = unity_WorldToObject;
+				float3 normal = normalize(mul(v.normal, modelMatrixInverse));
+				float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, v.vertex).xyz);
+				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;			
 
+				/* START diffuse light calculations */
+				// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
+				// https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
+				float3 lightDirection;
+				float attenuation; // intensity of light, e.g. point light is more attenuated when far away
+
+				if (_WorldSpaceLightPos0.w == 0) {
+					attenuation = 1.0;
+					lightDirection = normalize(_WorldSpaceLightPos0.xyz);
+				} else {
+					// when working with anything other than directional light, we also need to account for the distance to the light
+					float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - worldPos;
+					attenuation = 1.0 / length(vertexToLightSource);
+					lightDirection = normalize(vertexToLightSource);
+				}
+
+				float4 diffuseLight = attenuation * _LightColor0 * max(0.0, dot(normal, lightDirection));
+				/* END diffuse light calculations */
+
+				/* START pulse light calculations */
+				half pulseDistance = distance(worldPos, _Origin);
+				half pulseFade = saturate(1 - (_Distance / _Frequency));
+				float4 pulseLight = _Color
+									* pulseFade 
+									* (_Intensity/10)
+									* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
+				/* END pulse light calculations */
+
+				// initialise output sent to fragment shader
 				v2f output;
+				output.color = diffuseLight + pulseLight;
 				output.vertex = UnityObjectToClipPos(v.vertex);
 				output.uv = v.uv;
-				output.color = c;
 				return output;
 			}
 			
-			fixed4 frag (v2f i) : COLOR {
+			fixed4 frag(v2f i) : COLOR {
 				return i.color;
 			}
+
 			ENDCG
 		}
 	}
