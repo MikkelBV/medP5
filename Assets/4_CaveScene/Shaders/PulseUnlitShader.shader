@@ -7,6 +7,8 @@
    		_Intensity("Intensity", Range(0, 10)) = 1
 		_Color("Color", Color) = (1, 1, 1, 1)
 		_Width("PulseWidth", Float) = 5
+		_SpecCol("specular Color", Color) = (1.0,0.0,0.0,1.0)
+		_Shine("Shine",Float) = 10
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -32,19 +34,22 @@
 
 			sampler2D _MainTex;
 			uniform float4 _LightColor0; 
-      float4 _Origin;
-      half _Distance;
-      half _Frequency;
-      half _Intensity;
-      fixed4 _Color;
-			half _Width;
+      		float4 	_Origin;
+      		half 	_Distance;
+     		half 	_Frequency;
+     		half 	_Intensity;
+     		fixed4 	_Color;
+			half 	_Width;
+			float4 	_SpecCol;
+			half 	_Shine;
+			float3	reflection;
 			
 			v2f vert (appdata v) {
 				float4x4 modelMatrix = unity_ObjectToWorld;
 				float3x3 modelMatrixInverse = unity_WorldToObject;
 				float3 normal = normalize(mul(v.normal, modelMatrixInverse));
 				float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, v.vertex).xyz);
-				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;			
+				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;	
 
 				/* START diffuse light calculations */
 				// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
@@ -65,18 +70,44 @@
 				float4 diffuseLight = attenuation * _LightColor0 * max(0.0, dot(normal, lightDirection));
 				/* END diffuse light calculations */
 
+				/* START Specular light calculations */
+				reflection = normalize(reflect(-lightDirection, normal));
+				float specAttenuation = _Distance*0.1;
+				half specDistance = distance(worldPos, _Origin);
+				half specFade = saturate(1 - (_Distance / _Frequency));
+
+				float3 specular = (specAttenuation) 
+								* _SpecCol 
+								* pow(max(0.0, dot(reflection, viewDirection)), _Shine);
+				
+				float4 specularLight = float4(specular,1.0);
+
+
+				//this just makes another pulse
+				/*
+				specularLight = specFade 
+							  * (_Intensity / 10) 
+							  * (1 - saturate(abs(_Distance - specDistance) / _Width));
+				*/
+
+				/*STOP Specular light calculations*/
+
+
 				/* START pulse light calculations */
 				half pulseDistance = distance(worldPos, _Origin);
 				half pulseFade = saturate(1 - (_Distance / _Frequency));
 				float4 pulseLight = _Color
-									* pulseFade 
-									* (_Intensity/10)
-									* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
+								  * pulseFade 
+								  * (_Intensity/10)
+							 	  * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 				/* END pulse light calculations */
 
 				// initialise output sent to fragment shader
 				v2f output;
-				output.color = diffuseLight + pulseLight;
+				//output.color = diffuseLight + pulseLight;
+				output.color = specularLight + pulseLight;
+				//output.color = specularLight;
+				//output.color = specularLight + diffuseLight + pulseLight;
 				output.vertex = UnityObjectToClipPos(v.vertex);
 				output.uv = v.uv;
 				return output;
