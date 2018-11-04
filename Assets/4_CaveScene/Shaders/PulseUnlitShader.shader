@@ -3,8 +3,8 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
-    	_Frequency("Frequency", Range(0, 50)) = 50
-   		_Intensity("Intensity", Range(0, 10)) = 1
+		_Frequency("Frequency", Range(0, 50)) = 50
+		_Intensity("Intensity", Range(0, 10)) = 1
 		_Color("Color", Color) = (1, 1, 1, 1)
 		_Width("PulseWidth", Float) = 5
 		_SpecCol("specular Color", Color) = (1.0,0.0,0.0,1.0)
@@ -34,11 +34,11 @@
 
 			sampler2D _MainTex;
 			uniform float4 _LightColor0; 
-      		float4 	_Origin;
-      		half 	_Distance;
-     		half 	_Frequency;
-     		half 	_Intensity;
-     		fixed4 	_Color;
+			float4 	_Origin;
+			half 	_Distance;
+			half 	_Frequency;
+			half 	_Intensity;
+			fixed4 	_Color;
 			half 	_Width;
 			float4 	_SpecCol;
 			half 	_Shine;
@@ -47,9 +47,9 @@
 			v2f vert (appdata v) {
 				float4x4 modelMatrix = unity_ObjectToWorld;
 				float3x3 modelMatrixInverse = unity_WorldToObject;
+				float4 worldPos = mul(unity_ObjectToWorld, v.vertex);	
 				float3 normal = normalize(mul(v.normal, modelMatrixInverse));
 				float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, v.vertex).xyz);
-				float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;	
 
 				/* START diffuse light calculations */
 				// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
@@ -62,52 +62,40 @@
 					lightDirection = normalize(_WorldSpaceLightPos0.xyz);
 				} else {
 					// when working with anything other than directional light, we also need to account for the distance to the light
-					float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - worldPos;
+					float4 vertexToLightSource = _WorldSpaceLightPos0 - worldPos;
 					attenuation = 1.0 / length(vertexToLightSource);
 					lightDirection = normalize(vertexToLightSource);
 				}
 
-				float4 diffuseLight = attenuation * _LightColor0 * max(0.0, dot(normal, lightDirection));
+				float4 diffuseLight = attenuation 
+									* _LightColor0 
+									* max(0.0, dot(normal, lightDirection));
 				/* END diffuse light calculations */
-
-				/* START Specular light calculations */
-				reflection = normalize(reflect(-lightDirection, normal));
-				float specAttenuation = _Distance*0.1;
-				half specDistance = distance(worldPos, _Origin);
-				half specFade = saturate(1 - (_Distance / _Frequency));
-
-				float3 specular = (specAttenuation) 
-								* _SpecCol 
-								* pow(max(0.0, dot(reflection, viewDirection)), _Shine);
-				
-				float4 specularLight = float4(specular,1.0);
-
-
-				//this just makes another pulse
-				/*
-				specularLight = specFade 
-							  * (_Intensity / 10) 
-							  * (1 - saturate(abs(_Distance - specDistance) / _Width));
-				*/
-
-				/*STOP Specular light calculations*/
-
 
 				/* START pulse light calculations */
 				half pulseDistance = distance(worldPos, _Origin);
 				half pulseFade = saturate(1 - (_Distance / _Frequency));
-				float4 pulseLight = _Color
-								  * pulseFade 
-								  * (_Intensity/10)
+				float pulseLightIntensity = pulseFade 
+								  * _Intensity
 							 	  * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
+
+				float4 pulseLight = _Color * pulseLightIntensity;
 				/* END pulse light calculations */
+
+				/* START specular light calculations */
+				float4 vertexToPulse = worldPos - _Origin;
+				float specularAttenuation = 1.0 / length(vertexToPulse);
+				float4 specularDirection = normalize(vertexToPulse);
+
+				float4 specularLight = _SpecCol
+									* specularDirection 
+								  * pulseLightIntensity
+									* pow(max(0, dot(reflect(-specularDirection, normal), viewDirection)), _Shine);
+				/* END specular light calculations */
 
 				// initialise output sent to fragment shader
 				v2f output;
-				//output.color = diffuseLight + pulseLight;
-				output.color = specularLight + pulseLight;
-				//output.color = specularLight;
-				//output.color = specularLight + diffuseLight + pulseLight;
+				output.color = specularLight + diffuseLight + pulseLight;
 				output.vertex = UnityObjectToClipPos(v.vertex);
 				output.uv = v.uv;
 				return output;
