@@ -38,7 +38,7 @@ Material:
     - _PFadeDistance: 5
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
-    - _Shine: 10
+    - _Shine: 1
     - _Width: 5
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0, a: 1}

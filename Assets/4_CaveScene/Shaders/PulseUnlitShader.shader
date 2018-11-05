@@ -47,7 +47,7 @@
 			v2f vert (appdata v) {
 				float4x4 modelMatrix = unity_ObjectToWorld;
 				float3x3 modelMatrixInverse = unity_WorldToObject;
-				float4 worldPos = mul(unity_ObjectToWorld, v.vertex);	
+				float4 worldPos = mul(modelMatrix, v.vertex);	
 				float3 normal = normalize(mul(v.normal, modelMatrixInverse));
 				float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, v.vertex).xyz);
 
@@ -90,7 +90,7 @@
 				float4 specularLight = _SpecCol
 									* specularDirection 
 								  * pulseLightIntensity
-									* pow(max(0, dot(reflect(-specularDirection, normal), viewDirection)), _Shine);
+									* pow(max(0, dot(reflect(specularDirection, normal), viewDirection)), _Shine);
 				/* END specular light calculations */
 
 				// initialise output sent to fragment shader
