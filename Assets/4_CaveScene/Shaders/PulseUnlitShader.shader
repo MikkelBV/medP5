@@ -9,6 +9,7 @@
 		_Width("PulseWidth", Float) = 5
 		_SpecCol("specular Color", Color) = (1.0,0.0,0.0,1.0)
 		_Shine("Shine",Float) = 10
+		_MaxHeight("MaxHeight", Float)= 1.0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -23,11 +24,11 @@
 
 			struct appdata {
 				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
+				float4 uv : TEXCOORD0;
 				float3 normal : NORMAL;
 			};
 			struct v2f {
-				float2 uv : TEXCOORD0;
+				float4 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 				float4 color : COLOR;
 			};
@@ -43,6 +44,7 @@
 			float4 	_SpecCol;
 			half 	_Shine;
 			float3	reflection;
+			float _MaxHeight; // new
 			
 			v2f vert (appdata v) {
 				float4x4 modelMatrix = unity_ObjectToWorld;
@@ -51,6 +53,15 @@
 				float3 normal = normalize(mul(v.normal, modelMatrixInverse));
 				float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, v.vertex).xyz);
 
+				
+				// make bump map
+            	float4 bumpColor = tex2Dlod(_MainTex, v.uv);
+           		// make it grayscale
+				float df = 0.30*bumpColor.x + 0.59*bumpColor.y + 0.11*bumpColor.z;
+				float4 newVertexPos = float4(v.normal * df * _MaxHeight, 0.0) + v.vertex;
+            	//output.pos = UnityObjectToClipPos(v.vertex+newVertexPos);
+				
+				
 				/* START diffuse light calculations */
 				// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
 				// https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
@@ -93,6 +104,7 @@
 									* pow(max(0, dot(reflect(specularDirection, normal), viewDirection)), _Shine);
 				/* END specular light calculations */
 
+
 				// initialise output sent to fragment shader
 				v2f output;
 				output.color = specularLight + diffuseLight + pulseLight;
@@ -102,7 +114,8 @@
 			}
 			
 			fixed4 frag(v2f i) : COLOR {
-				return i.color;
+				return tex2D(_MainTex, i.uv.xy) * i.color;
+
 			}
 
 			ENDCG
