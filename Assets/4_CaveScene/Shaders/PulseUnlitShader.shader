@@ -8,7 +8,8 @@
 		_Width("PulseWidth", Float) = 5
 		_SpecCol("specular Color", Color) = (1.0,0.0,0.0,1.0)
 		_Shine("Shine",Float) = 10
-		_MaxHeight("MaxHeight", Float)= 1.0
+		_MaxHeight("MaxHeight", Float) = 1.0
+		_MaxDistance("MaxDistance", Float) = 100
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -26,15 +27,16 @@
 
 		sampler2D _MainTex;
 		uniform float4 _LightColor0; 
-		float4 	_Origin;
-		half 	_Distance;
-		half 	_Frequency;
-		half 	_Intensity;
-		half 	_Width;
-		float4 	_SpecCol;
-		half 	_Shine;
-		float3	reflection;
-		float _MaxHeight; // new
+		uniform float4 	_Origin;
+		uniform half 	_Distance;
+		uniform half 	_Frequency;
+		uniform half 	_Intensity;
+		uniform half 	_Width;
+		uniform float4 	_SpecCol;
+		uniform half 	_Shine;
+		uniform float3	reflection;
+		uniform float _MaxHeight;
+		uniform float _MaxDistance;
 		
 		v2f vert (appdata v) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
@@ -77,13 +79,13 @@
 
 			half pulseDistance = distance(worldPos, _Origin);
 			half pulseFade = saturate(1 - (_Distance / _Frequency));
-			float normDistance = _Distance / 100; 
+			float normDistance = _Distance / _MaxDistance; 
 			float r = 1 - normDistance;
 			float pulseLightIntensity = pulseFade 
 								* _Intensity
 								* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
-
-			float4 pulseLight = float4(r, 0.5, 0.4, 1) * pulseLightIntensity;
+								
+			float4 pulseLight = float4(r, 0.8, 0.7, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
 
 			/* START specular light calculations */
