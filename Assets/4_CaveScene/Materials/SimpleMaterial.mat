@@ -41,8 +41,8 @@ Material:
     - _Shine: 1
     - _Width: 5
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 0, b: 0.12061596, a: 1}
     - _HiY: {r: 0, g: 0, b: 0, a: 0}
     - _Origin: {r: -5.684082, g: 1.0486034, b: -13.881328, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecCol: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecCol: {r: 1, g: 0.4009434, b: 0.98758185, a: 1}

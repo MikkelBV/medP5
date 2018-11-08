@@ -5,7 +5,6 @@
 		_Distance("PulseDistance", Float) = 0
 		_Frequency("Frequency", Range(0, 50)) = 50
 		_Intensity("Intensity", Range(0, 10)) = 1
-		_Color("Color", Color) = (1, 1, 1, 1)
 		_Width("PulseWidth", Float) = 5
 		_SpecCol("specular Color", Color) = (1.0,0.0,0.0,1.0)
 		_Shine("Shine",Float) = 10
@@ -31,7 +30,6 @@
 		half 	_Distance;
 		half 	_Frequency;
 		half 	_Intensity;
-		fixed4 	_Color;
 		half 	_Width;
 		float4 	_SpecCol;
 		half 	_Shine;
@@ -76,13 +74,16 @@
 			/* END diffuse light calculations */
 
 			/* START pulse light calculations */
+
 			half pulseDistance = distance(worldPos, _Origin);
 			half pulseFade = saturate(1 - (_Distance / _Frequency));
+			float normDistance = _Distance / 100; 
+			float r = 1 - normDistance;
 			float pulseLightIntensity = pulseFade 
 								* _Intensity
 								* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 
-			float4 pulseLight = _Color * pulseLightIntensity;
+			float4 pulseLight = float4(r, 0.5, 0.4, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
 
 			/* START specular light calculations */
