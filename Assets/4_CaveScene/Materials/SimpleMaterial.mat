@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: SimpleMaterial
-  m_Shader: {fileID: 4800000, guid: 84e5a4dcc6ad7074aa2204305a9c45f1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 1758f04f7487ae0438134ef75b212341, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -19,11 +19,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: bcb1afdcd5fece941a47c0fdf59083cc, type: 3}
+        m_Texture: {fileID: 2800000, guid: 00bbccccaf0e5334f98279bd7d4ae07e, type: 3}
         m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 11a7762ea076bd54a81ed418907fe53e, type: 3}
+        m_Texture: {fileID: 2800000, guid: f45ea37e0e7645342af525348fdb7ab1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -32,6 +32,7 @@ Material:
     - _HiY: -2.19
     - _Intensity: 0
     - _LoY: 2
+    - _MaxDistance: 100
     - _MaxHeight: 1
     - _PDistance: 7.170069
     - _PEdgeSoftness: 5
@@ -39,7 +40,7 @@ Material:
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
     - _Shine: 1
-    - _SpecWidth: 10
+    - _SpecWidth: 15
     - _Width: 5
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0.12061596, a: 1}

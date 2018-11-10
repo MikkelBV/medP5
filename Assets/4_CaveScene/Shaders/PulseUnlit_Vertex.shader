@@ -66,7 +66,6 @@
 			/* END diffuse light calculations */
 
 			/* START pulse light calculations */
-
 			half pulseDistance = distance(worldPos, _Origin);
 			half pulseFade = saturate(1 - (_Distance / _Frequency));
 			float normDistance = _Distance / _MaxDistance; 

@@ -19,22 +19,16 @@
 			float4 vertex : POSITION;
 			float4 uv : TEXCOORD0;
 			float3 normal : NORMAL;
-			float4 tangent : TANGENT;
 		};
 		struct fragmentInput {
 			float4 vertex : SV_POSITION;
 			float4 color : COLOR;
 			float4 uv : TEXCOORD0;
-			float4 tex : TEXCOORD1;
-			float3 tangentWorld : TEXCOORD2;
-			float3 normalWorld :TEXCOORD3;
-			float3 binormalWorld : TEXCOORD4;
-			float4 worldPos : TEXCOORD5;
+			float4 worldPos : TEXCOORD1;
 		};
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
-		uniform float4	_BumpMap_ST;
 		uniform float4	_LightColor0; 
 		uniform float4 	_Origin;
 		uniform half 	_Distance;
@@ -45,7 +39,6 @@
 		uniform float4 	_SpecCol;
 		uniform half 	_Shine;
 		uniform float3	reflection;
-		uniform float 	_MaxHeight;
 		uniform float	_MaxDistance;
 		
 		fragmentInput vert (vertexInput vIn) {
@@ -55,11 +48,7 @@
 			float3x3 modelMatrixInverse = unity_WorldToObject;
 			float3 normal = normalize(mul(vIn.normal, modelMatrixInverse));
 			
-			
 			output.worldPos	= mul(modelMatrix, vIn.vertex);	
-			output.tangentWorld = normalize(mul(modelMatrix, float4(vIn.tangent.xyz, 0.0)).xyz);
-         	output.normalWorld 	= normalize(mul(float4(vIn.normal, 0.0), modelMatrixInverse).xyz);
-         	output.binormalWorld = normalize(cross(output.normalWorld, output.tangentWorld) * vIn.tangent.w);
 			output.vertex = UnityObjectToClipPos(vIn.vertex);
 			output.uv = vIn.uv;
 			return output;
@@ -76,7 +65,6 @@
 			float3 localCoords = float3(2.0 * encodedTex.a - 1.0,
 										2.0 * encodedTex.g - 1.0, 
 										0.0);
-			
 			/*END Bumpmap calculations*/
 
 
@@ -121,7 +109,6 @@
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
 			
-
 			float4 specularLight = _SpecCol
 								 * specLightIntensity
 								 * pow(max(0, dot(reflect(-specularDirection, localCoords), viewDirection)), _Shine);				 			
