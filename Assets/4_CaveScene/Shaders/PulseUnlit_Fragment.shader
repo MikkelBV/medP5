@@ -19,11 +19,15 @@
 			float4 vertex : POSITION;
 			float4 uv : TEXCOORD0;
 			float3 normal : NORMAL;
+			float4 tangent : TANGENT;
 		};
 		struct v2f {
 			float4 vertex : SV_POSITION;
 			float4 uv : TEXCOORD0;
 			float4 worldPos : TEXCOORD1;
+			float3 tangentWorld : TEXCOORD2;  
+         	float3 normalWorld : TEXCOORD3;
+        	float3 binormalWorld : TEXCOORD4;
 			float3 normal : NORMAL;
 		};
 
@@ -43,8 +47,16 @@
 		
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
+			float4x4 modelMatrixInverse = unity_WorldToObject;
 
 			v2f output;
+			output.tangentWorld =
+					 normalize(mul(modelMatrix, float4(vIn.tangent.xyz,0.0)).xyz);
+			output.normalWorld =
+					normalize(mul(float4(vIn.normal, 0.0),modelMatrixInverse).xyz);
+			output.binormalWorld =
+					normalize(cross(output.normalWorld,output.tangentWorld) * vIn.tangent.w);
+
 			output.normal = normalize(mul(vIn.normal, modelMatrix));
 			output.worldPos	= mul(modelMatrix, vIn.vertex);	
 			output.vertex = UnityObjectToClipPos(vIn.vertex);
@@ -62,6 +74,14 @@
 				0.0
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
+
+			float3x3 local2World = float3x3(
+			   fIn.tangentWorld,
+			   fIn.binormalWorld,
+			   fIn.normalWorld
+			);
+			float3 normalDirection = normalize(mul(localCoords,local2World));
+
 			/*END Bumpmap calculations*/
 
 			/* START diffuse light calculations */
@@ -90,8 +110,8 @@
 			half pulseFade = saturate(1 - (_Distance / _Frequency));
 			float normDistance = _Distance / _MaxDistance; 
 			float pulseLightIntensity = pulseFade 
-								* _Intensity
-								* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
+									  * _Intensity
+									  * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 
 			float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
@@ -100,12 +120,14 @@
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
 			float specLightIntensity = pulseFade 
-								* _Intensity
-								* (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
+									 * _Intensity
+									 * (1 - saturate(abs((_Distance-_SpecWidth) - pulseDistance) / _SpecWidth));
 
+			
 			float4 specularLight = _SpecCol
 								 * specLightIntensity
-								 * pow(max(0, dot(reflect(-specularDirection, localCoords), viewDirection)), _Shine); 			
+								 * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
+
 			/* END specular light calculations */
 
 			float4 light = diffuseLight + specularLight + pulseLight;
