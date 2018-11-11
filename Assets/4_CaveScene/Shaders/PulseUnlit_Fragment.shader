@@ -15,16 +15,16 @@
 	CGINCLUDE
 		#include "UnityCG.cginc"
 
-		struct vertexInput {
+		struct appdata {
 			float4 vertex : POSITION;
 			float4 uv : TEXCOORD0;
 			float3 normal : NORMAL;
 		};
-		struct fragmentInput {
+		struct v2f {
 			float4 vertex : SV_POSITION;
-			float4 color : COLOR;
 			float4 uv : TEXCOORD0;
 			float4 worldPos : TEXCOORD1;
+			float3 normal : NORMAL;
 		};
 
 		sampler2D _MainTex;
@@ -41,32 +41,28 @@
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
 		
-		fragmentInput vert (vertexInput vIn) {
-			fragmentInput output;
-
+		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
-			float3x3 modelMatrixInverse = unity_WorldToObject;
-			float3 normal = normalize(mul(vIn.normal, modelMatrixInverse));
-			
+
+			v2f output;
+			output.normal = normalize(mul(vIn.normal, modelMatrix));
 			output.worldPos	= mul(modelMatrix, vIn.vertex);	
 			output.vertex = UnityObjectToClipPos(vIn.vertex);
 			output.uv = vIn.uv;
 			return output;
 		}
 		
-		fixed4 frag(fragmentInput fIn) : COLOR {
-
+		fixed4 frag(v2f fIn) : COLOR {			
 			float3 viewDirection = normalize(_WorldSpaceCameraPos - fIn.worldPos.xyz);
-			
 			/*START Bumpmap calculations*/
-			float4 encodedTex = tex2D(_BumpMap,
-			 						  fIn.uv.xy);
-
-			float3 localCoords = float3(2.0 * encodedTex.a - 1.0,
-										2.0 * encodedTex.g - 1.0, 
-										0.0);
+			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
+			float3 localCoords = float3(
+				2.0 * encodedTex.a - 1.0,
+				2.0 * encodedTex.g - 1.0, 
+				0.0
+			);
+			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
 			/*END Bumpmap calculations*/
-
 
 			/* START diffuse light calculations */
 			// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
@@ -84,44 +80,38 @@
 				lightDirection = normalize(vertexToLightSource);
 			}
 
-        	float3 diffuseLight = attenuation 
-                                * _LightColor0
-                                * max(0.0, dot(localCoords, lightDirection));
+			float4 diffuseLight = attenuation 
+								* _LightColor0
+								* max(0.0, dot(fIn.normal, lightDirection));
 			/* END diffuse light calculations */
 
 			/* START pulse light calculations */
 			half pulseDistance = distance(fIn.worldPos, _Origin);
 			half pulseFade = saturate(1 - (_Distance / _Frequency));
 			float normDistance = _Distance / _MaxDistance; 
-			float r = 1 - normDistance;
 			float pulseLightIntensity = pulseFade 
-							   	      * _Intensity
-								      * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
+								* _Intensity
+								* (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 
-			float specLightIntensity = pulseFade 
-							   	      * _Intensity
-								      * (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
-
-			float4 pulseLight = float4(r, 0.0, normDistance, 1) * pulseLightIntensity;
+			float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
 
 			/* START specular light calculations */
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
-			
+			float specLightIntensity = pulseFade 
+								* _Intensity
+								* (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
+
 			float4 specularLight = _SpecCol
 								 * specLightIntensity
-								 * pow(max(0, dot(reflect(-specularDirection, localCoords), viewDirection)), _Shine);				 			
+								 * pow(max(0, dot(reflect(-specularDirection, localCoords), viewDirection)), _Shine); 			
 			/* END specular light calculations */
 
-
-			// initialise output sent to fragment shader
-
-			//output.color = specularLight + diffuseLight + pulseLight;
-			//return tex2D(_MainTex, i.uv.xy) * i.color;
-			float4 light = float4(diffuseLight + specularLight + pulseLight, 1.0);
+			float4 light = diffuseLight + specularLight + pulseLight;
 			return tex2D(_MainTex, fIn.uv.xy) * light;
 		}
+
 	ENDCG
 
 	SubShader {
