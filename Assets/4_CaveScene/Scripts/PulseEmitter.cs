@@ -15,7 +15,6 @@ public class PulseEmitter : MonoBehaviour {
 
 	void Update () {
 		distance += speed * Time.deltaTime;
-		Debug.Log("Distance: "+distance);
 
 		if (Input.GetMouseButtonDown(0)){
 			EmitSound(100f, 8f);

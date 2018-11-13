@@ -33,6 +33,7 @@
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
+		uniform float4 _BumpMap_ST;
 		uniform float4	_LightColor0; 
 		uniform float4 	_Origin;
 		uniform half 	_Distance;
@@ -121,10 +122,10 @@
 			float4 specularDirection  = normalize(vertexToPulse);
 			float specLightIntensity = pulseFade 
 									 * _Intensity
-									 * (1 - saturate(abs((_Distance-_SpecWidth) - pulseDistance) / _SpecWidth));
+									 * (1 - saturate(abs((_Distance - _SpecWidth) - pulseDistance) / _SpecWidth));
 
 			
-			float4 specularLight = _SpecCol
+			float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
 								 * specLightIntensity
 								 * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
 

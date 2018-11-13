@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -143,8 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e70956ab33537428039523b76df5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulseMaterial: {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
-  normalMap: {fileID: 0}
   thisRenderer: {fileID: 0}
 --- !u!1 &409974010
 GameObject:
@@ -750,7 +748,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1929207465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 148.2, y: 2.2, z: 32.8}
+  m_LocalPosition: {x: 32.04, y: -4.76, z: -44.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 409974013}
@@ -769,7 +767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2a24e512038bb49a2a5c9808bad02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 60
+  speed: 30
 --- !u!114 &1929207473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -837,7 +835,7 @@ Prefab:
     - target: {fileID: 2300000, guid: ec7ed5fe72d97ec4eb8506ec0dc7805e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: cd6335b2c48b95045a93dd04cb56c050, type: 2}
+      objectReference: {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
     - target: {fileID: 100000, guid: ec7ed5fe72d97ec4eb8506ec0dc7805e, type: 3}
       propertyPath: m_TagString
       value: Untagged

@@ -19,7 +19,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 00bbccccaf0e5334f98279bd7d4ae07e, type: 3}
+        m_Texture: {fileID: 2800000, guid: bcb1afdcd5fece941a47c0fdf59083cc, type: 3}
         m_Scale: {x: 10, y: 10}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -27,10 +27,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Distance: 0
-    - _Frequency: 200
+    - _Distance: 1.36
+    - _Frequency: 42.1
     - _HiY: -2.19
-    - _Intensity: 0
+    - _Intensity: 0.9
     - _LoY: 2
     - _MaxDistance: 100
     - _MaxHeight: 1
@@ -39,12 +39,12 @@ Material:
     - _PFadeDistance: 5
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
-    - _Shine: 20
-    - _SpecWidth: 20
-    - _Width: 1
+    - _Shine: 50
+    - _SpecWidth: 15
+    - _Width: 6
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0.12061596, a: 1}
     - _HiY: {r: 0, g: 0, b: 0, a: 0}
-    - _Origin: {r: -5.684082, g: 1.0486034, b: -13.881328, a: 0}
+    - _Origin: {r: 0, g: 0, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecCol: {r: 1, g: 1, b: 1, a: 1}
