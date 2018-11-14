@@ -1,16 +1,26 @@
 ﻿Shader "Unlit/PulseUnlit_Fragment" {
 	Properties {
-		_MainTex ("Texture", 2D) = "white" {}
+		[Header(Textures)]
+		_MainTex ("Main Texture", 2D) = "white" {}
 		_BumpMap("Normal map", 2D)= "bump" {}
+		_NoiseTex("Noise Texture", 2D) = "grey" {}
+		[Header(Pulse Settings)]
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
-		_Frequency("Frequency", Range(0, 50)) = 50
-		_Intensity("Intensity", Range(0, 10)) = 1
+		_MaxDistance("MaxDistance", Float) = 100
+			[HideInInspector]
+			_Frequency("Frequency", Range(0, 50)) = 50
+			[HideInInspector]
+			_Intensity("Intensity", Range(0, 10)) = 1
 		_Width("PulseWidth", Float) = 5
+		[Header(Specular Settings)]
 		_SpecWidth("SpecularWidth", Float) = 5
 		_SpecCol("Specular Color", Color) = (1.0,0.0,0.0,1.0)
 		_Shine("Shine",Float) = 10
-		_MaxDistance("MaxDistance", Float) = 100
+		[Header(Distortion Settings)]
+		_Mitigation ("Distortion mitigation", Range(1,60)) = 1
+		_SpeedX ("Speed x", Range(0,20)) = 1
+		_SpeedY ("Speed y", Range(0,20)) = 1
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -33,7 +43,10 @@
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
+		sampler2D _NoiseTex;
 		uniform float4 _BumpMap_ST;
+		uniform float4 _MainTex_ST;
+		uniform float4 _NoiseTex_ST;
 		uniform float4	_LightColor0; 
 		uniform float4 	_Origin;
 		uniform half 	_Distance;
@@ -45,6 +58,10 @@
 		uniform half 	_Shine;
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
+
+		float _SpeedX;
+		float _SpeedY;
+		float _Mitigation;
 		
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
@@ -75,6 +92,14 @@
 				0.0
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
+
+			//bump distortion
+			half2 bumpUV = encodedTex;
+			half noiseVal = tex2D(_NoiseTex, bumpUV).r;
+			//_time, _speed and _mitigation decide the appearance of the distortion
+			bumpUV.x = bumpUV.x + noiseVal * sin(_Time.x * _SpeedX) / _Mitigation;
+			bumpUV.y = bumpUV.y + noiseVal * sin(_Time.y * _SpeedY) / _Mitigation;
+			//
 
 			float3x3 local2World = float3x3(
 			   fIn.tangentWorld,
@@ -132,7 +157,10 @@
 			/* END specular light calculations */
 
 			float4 light = diffuseLight + specularLight + pulseLight;
-			return tex2D(_MainTex, fIn.uv.xy) * light;
+			
+
+			//return tex2D(_MainTex, fIn.uv.xy) * light;
+			return tex2D(_MainTex, bumpUV) * light;		
 		}
 
 	ENDCG
