@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PulseEmitter : MonoBehaviour {
 	public static float distance = 0.0f;
 	public static float fadeDistance;
 	public static float edgeSoftness;
+	public List<Vector3> rays;
 
 	public int speed = 25;
 
@@ -21,6 +23,8 @@ public class PulseEmitter : MonoBehaviour {
 		} else if (Input.GetMouseButtonDown(1)) {
 			EmitSound(20f, 2f);
 		}
+
+		RayCasting();
 	}
 
 	void EmitSound(float freq, float intensity) {
@@ -32,6 +36,21 @@ public class PulseEmitter : MonoBehaviour {
 			visualizer.thisRenderer.material.SetVector("_Origin", pulseOrigin);
 			visualizer.thisRenderer.material.SetFloat("_Frequency", freq);
 			visualizer.thisRenderer.material.SetFloat("_Intensity", intensity);
+		}
+	}
+
+	void RayCasting () {
+		RaycastHit hit; 
+		float rayDistance; 
+		
+		for (int i = 0; i < rays.Count; i++){
+			if(Physics.Raycast(transform.position, (rays[i]), out hit)){
+				rayDistance = hit.distance;
+				Debug.DrawRay(transform.position, rays[i] * rayDistance, Color.green);
+				print(rayDistance + " " + hit.collider.gameObject.name);
+			} else {
+				Debug.DrawRay(transform.position, rays[i] * 10, Color.red);
+			}
 		}
 	}
 }
