@@ -24,7 +24,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: bcb1afdcd5fece941a47c0fdf59083cc, type: 3}
-        m_Scale: {x: 10.33, y: 11.56}
+        m_Scale: {x: 0, y: 0}
         m_Offset: {x: 0, y: 0}
     - _EmiTex:
         m_Texture: {fileID: 2800000, guid: a3e975c584c18fa45a8cedceefc1d62d, type: 3}
@@ -32,7 +32,7 @@ Material:
         m_Offset: {x: -0.02, y: 0.3}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: f45ea37e0e7645342af525348fdb7ab1, type: 3}
-        m_Scale: {x: 3.15, y: 1.31}
+        m_Scale: {x: 0, y: 0}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
         m_Texture: {fileID: 2800000, guid: 4edb7a3479c57c14090f2320f1cb8fec, type: 3}
@@ -45,23 +45,26 @@ Material:
     - _Intensity: 0
     - _LoY: 2
     - _MaxDistance: 100
-    - _MaxHeight: 1
+    - _MaxHeight: -0.019
     - _Mitigation: 2.7
     - _PDistance: 7.170069
     - _PEdgeSoftness: 5
     - _PFadeDistance: 5
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
+    - _Scale: 0.005
     - _Shine: 10
     - _SpecWidth: 100
-    - _SpeedX: 18.66
-    - _SpeedY: 19.05
+    - _SpeedX: 5
+    - _SpeedY: 5
     - _Threshold: 10
-    - _Width: 2
+    - _TileX: 1
+    - _TileY: 1
+    - _Width: 5
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0.12061596, a: 1}
     - _EmissionColor: {r: 0.3066733, g: 1, b: 0, a: 1}
     - _HiY: {r: 0, g: 0, b: 0, a: 0}
     - _Origin: {r: 0, g: 0, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecCol: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecCol: {r: 0, g: 0, b: 0, a: 1}

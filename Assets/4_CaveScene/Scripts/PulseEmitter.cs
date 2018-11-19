@@ -9,6 +9,7 @@ public class PulseEmitter : MonoBehaviour {
 	public List<Vector3> rays;
 
 	public int speed = 25;
+	float rayDistance;
 
 	void Start () {
 		fadeDistance = 5f;
@@ -41,7 +42,7 @@ public class PulseEmitter : MonoBehaviour {
 
 	void RayCasting () {
 		RaycastHit hit; 
-		float rayDistance; 
+		 
 		
 		for (int i = 0; i < rays.Count; i++){
 			if(Physics.Raycast(transform.position, (rays[i]), out hit)){

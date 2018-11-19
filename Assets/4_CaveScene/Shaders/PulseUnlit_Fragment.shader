@@ -3,7 +3,7 @@
 		[Header(Textures)]
 		_MainTex ("Main Texture", 2D) = "white" {}
 		_BumpMap("Normal map", 2D)= "bump" {}
-		_NoiseTex("Noise Texture", 2D) = "grey" {}
+
 		[Header(Pulse Settings)]
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
@@ -13,14 +13,18 @@
 			[HideInInspector]
 			_Intensity("Intensity", Range(0, 10)) = 1
 		_Width("PulseWidth", Float) = 5
+
 		[Header(Specular Settings)]
 		_SpecWidth("SpecularWidth", Float) = 5
 		_SpecCol("Specular Color", Color) = (1.0,0.0,0.0,1.0)
 		_Shine("Shine",Float) = 10
+
 		[Header(Distortion Settings)]
-		_Mitigation ("Distortion mitigation", Range(1,60)) = 1
-		_SpeedX ("Speed x", Range(0,20)) = 1
-		_SpeedY ("Speed y", Range(0,20)) = 1
+        _SpeedX("SpeedX", float)=3.0
+        _SpeedY("SpeedY", float)=3.0
+        _Scale("Scale", range(0.005, 0.2))=0.03
+        _TileX("TileX", float)=5
+        _TileY("TileY", float)=5
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -43,10 +47,8 @@
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
-		sampler2D _NoiseTex;
-		uniform float4 _BumpMap_ST;
-		uniform float4 _MainTex_ST;
-		uniform float4 _NoiseTex_ST;
+		uniform float4  _BumpMap_ST;
+		uniform float4  _MainTex_ST;
 		uniform float4	_LightColor0; 
 		uniform float4 	_Origin;
 		uniform half 	_Distance;
@@ -59,10 +61,12 @@
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
 
-		float _SpeedX;
-		float _SpeedY;
-		float _Mitigation;
-		
+        float _SpeedX;
+        float _SpeedY;
+        float _Scale;
+        float _TileX;
+        float _TileY;
+
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
 			float4x4 modelMatrixInverse = unity_WorldToObject;
@@ -82,8 +86,9 @@
 			return output;
 		}
 		
-		fixed4 frag(v2f fIn) : COLOR {			
+		fixed4 frag(v2f fIn) : SV_TARGET {			
 			float3 viewDirection = normalize(_WorldSpaceCameraPos - fIn.worldPos.xyz);
+
 			/*START Bumpmap calculations*/
 			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
 			float3 localCoords = float3(
@@ -92,14 +97,6 @@
 				0.0
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
-
-			//bump distortion
-			half2 bumpUV = encodedTex;
-			half noiseVal = tex2D(_NoiseTex, bumpUV).r;
-			//_time, _speed and _mitigation decide the appearance of the distortion
-			bumpUV.x = bumpUV.x + noiseVal * sin(_Time.x * _SpeedX) / _Mitigation;
-			bumpUV.y = bumpUV.y + noiseVal * sin(_Time.y * _SpeedY) / _Mitigation;
-			//
 
 			float3x3 local2World = float3x3(
 			   fIn.tangentWorld,
@@ -141,7 +138,7 @@
 
 			float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
-
+			
 			/* START specular light calculations */
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
@@ -156,11 +153,21 @@
 
 			/* END specular light calculations */
 
-			float4 light = diffuseLight + specularLight + pulseLight;
-			
+			//Distorted UV calculations
+			float4 distortedUV = fIn.uv;
+			distortedUV.x += sin ((fIn.uv.x + fIn.uv.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
+			distortedUV.y += cos (fIn.uv.y * _TileY + _Time.g * _SpeedY) * _Scale;
 
+			//Compile all light calculations
+			float4 light = diffuseLight + specularLight + pulseLight;
+
+		
+			
+			/*Change to this for distorted*/
+			return tex2D(_MainTex, distortedUV.xy) * light;
+			
+			/*Change to this for original*/
 			//return tex2D(_MainTex, fIn.uv.xy) * light;
-			return tex2D(_MainTex, bumpUV) * light;		
 		}
 
 	ENDCG
