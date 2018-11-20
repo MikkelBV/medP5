@@ -8,10 +8,12 @@
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
 		_MaxDistance("MaxDistance", Float) = 100
+
 			[HideInInspector]
 			_Frequency("Frequency", Range(0, 50)) = 50
 			[HideInInspector]
 			_Intensity("Intensity", Range(0, 10)) = 1
+			
 		_Width("PulseWidth", Float) = 5
 
 		[Header(Specular Settings)]
@@ -23,8 +25,11 @@
         _SpeedX("SpeedX", float)=3.0
         _SpeedY("SpeedY", float)=3.0
         _Scale("Scale", range(0.005, 0.2))=0.03
-        _TileX("TileX", float)=5
-        _TileY("TileY", float)=5
+
+			[HideInInspector]
+        	_TileX("TileX", float)=5
+			[HideInInspector]
+        	_TileY("TileY", float)=5
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -60,12 +65,11 @@
 		uniform half 	_Shine;
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
-
-        float _SpeedX;
-        float _SpeedY;
-        float _Scale;
-        float _TileX;
-        float _TileY;
+        uniform float   _SpeedX;
+        uniform float   _SpeedY;
+        uniform float   _Scale;
+        uniform float   _TileX;
+        uniform float   _TileY;
 
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
@@ -90,7 +94,14 @@
 			float3 viewDirection = normalize(_WorldSpaceCameraPos - fIn.worldPos.xyz);
 
 			/*START Bumpmap calculations*/
+			//Load bump texture
 			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
+			
+			//Distort
+			encodedTex.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
+			encodedTex.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
+			
+			//Create bumpcoordinates for reflection?
 			float3 localCoords = float3(
 				2.0 * encodedTex.a - 1.0,
 				2.0 * encodedTex.g - 1.0, 
@@ -98,13 +109,13 @@
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
 
+			//Convert to world coordinates
 			float3x3 local2World = float3x3(
 			   fIn.tangentWorld,
 			   fIn.binormalWorld,
 			   fIn.normalWorld
 			);
 			float3 normalDirection = normalize(mul(localCoords,local2World));
-
 			/*END Bumpmap calculations*/
 
 			/* START diffuse light calculations */
@@ -153,21 +164,11 @@
 
 			/* END specular light calculations */
 
-			//Distorted UV calculations
-			float4 distortedUV = fIn.uv;
-			distortedUV.x += sin ((fIn.uv.x + fIn.uv.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
-			distortedUV.y += cos (fIn.uv.y * _TileY + _Time.g * _SpeedY) * _Scale;
-
 			//Compile all light calculations
 			float4 light = diffuseLight + specularLight + pulseLight;
-
-		
-			
-			/*Change to this for distorted*/
-			return tex2D(_MainTex, distortedUV.xy) * light;
 			
 			/*Change to this for original*/
-			//return tex2D(_MainTex, fIn.uv.xy) * light;
+			return tex2D(_MainTex, fIn.uv.xy) * light;
 		}
 
 	ENDCG
