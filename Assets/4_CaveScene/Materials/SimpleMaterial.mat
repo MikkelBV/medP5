@@ -58,7 +58,7 @@ Material:
     - _RimPower: 5.425373
     - _Scale: 0.2
     - _Shine: 10
-    - _SpecWidth: 100
+    - _SpecWidth: 10000
     - _SpeedX: 5
     - _SpeedY: 5
     - _Threshold: 10

@@ -157,9 +157,12 @@
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
 			float specLightIntensity = pulseFade 
-									 * _Intensity
-									 * (1 - saturate(abs((_Distance - _SpecWidth) - pulseDistance) / _SpecWidth));
+									 * (_Intensity * 2)
+									 * (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
 
+			if (distance(fIn.worldPos, _Origin) > _Distance) {
+				specLightIntensity = 0;
+			}
 			
 			float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
 								 * specLightIntensity
@@ -167,7 +170,7 @@
 
 			/* END specular light calculations */
 
-			//////////////////////////////////////////////////
+			/* START reverb calculations */
 			float4 reverbMap = tex2D(_ReverbBumpMap, fIn.uv.xy);
 			reverbMap.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
 			reverbMap.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
@@ -178,7 +181,14 @@
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
 			normalDirection = normalize(mul(localCoords, local2World));
-			float4 reverbLight = specLightIntensity * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
+			float reverbIntensity = saturate(1 - (_Distance / (_MaxDistance * 2))) 
+									 * (_Intensity / 10)
+									 * (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
+			if (distance(fIn.worldPos, _Origin) > _Distance) {
+				reverbIntensity = 0;
+			}
+			float4 reverbLight = (reverbIntensity) * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
+			/* END reverb calculations */
 
 			// combine all light calculations
 			float4 light = diffuseLight + specularLight + pulseLight + reverbLight;
