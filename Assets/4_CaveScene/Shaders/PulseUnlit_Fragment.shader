@@ -25,6 +25,8 @@
         _SpeedX("SpeedX", float)=3.0
         _SpeedY("SpeedY", float)=3.0
         _Scale("Scale", range(0.005, 0.2))=0.03
+				_ReverbBumpMap("Normal map", 2D)= "bump" {}
+
 
 			[HideInInspector]
         	_TileX("TileX", float)=5
@@ -51,6 +53,7 @@
 		};
 
 		sampler2D _MainTex;
+		sampler2D _ReverbBumpMap;
 		sampler2D _BumpMap;
 		uniform float4  _BumpMap_ST;
 		uniform float4  _MainTex_ST;
@@ -98,8 +101,8 @@
 			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
 			
 			//Distort
-			encodedTex.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
-			encodedTex.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
+			//encodedTex.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
+			//encodedTex.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
 			
 			//Create bumpcoordinates for reflection?
 			float3 localCoords = float3(
@@ -164,8 +167,21 @@
 
 			/* END specular light calculations */
 
-			//Compile all light calculations
-			float4 light = diffuseLight + specularLight + pulseLight;
+			//////////////////////////////////////////////////
+			float4 reverbMap = tex2D(_ReverbBumpMap, fIn.uv.xy);
+			reverbMap.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
+			reverbMap.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
+			localCoords = float3(
+				2.0 * reverbMap.a - 1.0,
+				2.0 * reverbMap.g - 1.0, 
+				0.0
+			);
+			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
+			normalDirection = normalize(mul(localCoords, local2World));
+			float4 reverbLight = specLightIntensity * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
+
+			// combine all light calculations
+			float4 light = diffuseLight + specularLight + pulseLight + reverbLight;
 			
 			/*Change to this for original*/
 			return tex2D(_MainTex, fIn.uv.xy) * light;

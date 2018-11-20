@@ -38,6 +38,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4edb7a3479c57c14090f2320f1cb8fec, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReverbBumpMap:
+        m_Texture: {fileID: 2800000, guid: 00bbccccaf0e5334f98279bd7d4ae07e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Distance: 1.36
     - _Frequency: 50
@@ -52,7 +56,7 @@ Material:
     - _PFadeDistance: 5
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
-    - _Scale: 0.005
+    - _Scale: 0.2
     - _Shine: 10
     - _SpecWidth: 100
     - _SpeedX: 5
