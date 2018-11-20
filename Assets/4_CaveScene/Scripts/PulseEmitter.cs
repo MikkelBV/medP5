@@ -9,7 +9,7 @@ public class PulseEmitter : MonoBehaviour {
 	public List<Vector3> rays;
 
 	public int speed = 25;
-	float rayDistance;
+	public float space;
 
 	void Start () {
 		fadeDistance = 5f;
@@ -42,16 +42,19 @@ public class PulseEmitter : MonoBehaviour {
 
 	void RayCasting () {
 		RaycastHit hit; 
-		 
-		
+		float raySum = 0;
+
 		for (int i = 0; i < rays.Count; i++){
-			if(Physics.Raycast(transform.position, (rays[i]), out hit)){
-				rayDistance = hit.distance;
+			if(Physics.Raycast(transform.position, rays[i], out hit)){
+				var rayDistance = hit.distance;
+				raySum += rayDistance;
+
 				Debug.DrawRay(transform.position, rays[i] * rayDistance, Color.green);
-				print(rayDistance + " " + hit.collider.gameObject.name);
 			} else {
 				Debug.DrawRay(transform.position, rays[i] * 10, Color.red);
 			}
 		}
+
+		space = raySum / rays.Count;
 	}
 }
