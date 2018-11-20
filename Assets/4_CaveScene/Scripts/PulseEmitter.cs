@@ -4,16 +4,13 @@ using System.Collections.Generic;
 
 public class PulseEmitter : MonoBehaviour {
 	public static float distance = 0.0f;
-	public static float fadeDistance;
-	public static float edgeSoftness;
-	public List<Vector3> rays;
+	public static float space;
 
+	public List<Vector3> rays;
 	public int speed = 25;
-	public float space;
 
 	void Start () {
-		fadeDistance = 5f;
-		edgeSoftness = 5f;
+
 	}
 
 	void Update () {

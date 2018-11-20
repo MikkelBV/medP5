@@ -50,7 +50,8 @@ Material:
     - _PDistance: 7.170069
     - _PEdgeSoftness: 5
     - _PFadeDistance: 5
-    - _ReverbIntensity: 0.932
+    - _ReverbIntensity: 0.358
+    - _ReverbSpeed: 0.1
     - _RimOn: 0.41791046
     - _RimPower: 5.425373
     - _Scale: 0.2

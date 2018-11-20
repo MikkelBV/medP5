@@ -20,14 +20,8 @@
 		_Shine("Shine",Float) = 10
 
 		[Header(Distortion Settings)]
-		_SpeedX("SpeedX", float)=3.0
-		//_SpeedY("SpeedY", float)=3.0
-		//_Scale("Scale", Range(0.005, 0.2)) = 0.03
+		_ReverbSpeed("Reverb Speed", float) = 0.1
 		_ReverbIntensity("Reverb Intensity", Range(0, 1)) = 1
-		//[HideInInspector]
-		//_TileX("TileX", float)=5
-		//[HideInInspector]
-		//_TileY("TileY", float)=5
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -63,12 +57,8 @@
 		uniform half 	_Shine;
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
-		uniform float _SpeedX;
-		//uniform float _SpeedY;
+		uniform float _ReverbSpeed;
 		uniform float _ReverbIntensity;
-		//uniform float _Scale;
-		//uniform float _TileX;
-		//uniform float _TileY;
 
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
@@ -165,8 +155,8 @@
 										* _ReverbIntensity
 										* (1 - saturate(abs((_Distance - (_SpecWidth / 2)) - pulseDistance) / _SpecWidth));
 			float4 reverbLight = reverbIntensity 
-										* sin(_Time.g * 0.1 * fIn.vertex.x) 
-										* cos(_Time.g * 0.1 * fIn.vertex.y);
+										* sin(_Time.b * _ReverbSpeed * fIn.vertex.x);
+										//* cos(_Time.b * _ReverbSpeed * fIn.vertex.y);
 			/* END reverb simulation calculations */
 
 			// combine all light calculations
