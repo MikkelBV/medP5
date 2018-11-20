@@ -7,14 +7,12 @@
 		[Header(Pulse Settings)]
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
-		_MaxDistance("MaxDistance", Float) = 100
-
-			[HideInInspector]
-			_Frequency("Frequency", Range(0, 50)) = 50
-			[HideInInspector]
-			_Intensity("Intensity", Range(0, 10)) = 1
-			
 		_Width("PulseWidth", Float) = 5
+		_MaxDistance("MaxDistance", Float) = 100
+		[HideInInspector]
+		_Frequency("Frequency", Range(0, 50)) = 50
+		[HideInInspector]
+		_Intensity("Intensity", Range(0, 10)) = 1
 
 		[Header(Specular Settings)]
 		_SpecWidth("SpecularWidth", Float) = 5
@@ -22,14 +20,14 @@
 		_Shine("Shine",Float) = 10
 
 		[Header(Distortion Settings)]
-        _SpeedX("SpeedX", float)=3.0
-        _SpeedY("SpeedY", float)=3.0
-        _Scale("Scale", range(0.005, 0.2))=0.03
-
-			[HideInInspector]
-        	_TileX("TileX", float)=5
-			[HideInInspector]
-        	_TileY("TileY", float)=5
+		_SpeedX("SpeedX", float)=3.0
+		//_SpeedY("SpeedY", float)=3.0
+		//_Scale("Scale", Range(0.005, 0.2)) = 0.03
+		_ReverbIntensity("Reverb Intensity", Range(0, 1)) = 1
+		//[HideInInspector]
+		//_TileX("TileX", float)=5
+		//[HideInInspector]
+		//_TileY("TileY", float)=5
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -45,31 +43,32 @@
 			float4 uv : TEXCOORD0;
 			float4 worldPos : TEXCOORD1;
 			float3 tangentWorld : TEXCOORD2;  
-         	float3 normalWorld : TEXCOORD3;
-        	float3 binormalWorld : TEXCOORD4;
+			float3 normalWorld : TEXCOORD3;
+			float3 binormalWorld : TEXCOORD4;
 			float3 normal : NORMAL;
 		};
 
 		sampler2D _MainTex;
 		sampler2D _BumpMap;
-		uniform float4  _BumpMap_ST;
-		uniform float4  _MainTex_ST;
-		uniform float4	_LightColor0; 
-		uniform float4 	_Origin;
-		uniform half 	_Distance;
-		uniform half 	_Frequency;
-		uniform half 	_Intensity;
-		uniform half 	_Width;
+		uniform float4 _BumpMap_ST;
+		uniform float4 _MainTex_ST;
+		uniform float4 _LightColor0; 
+		uniform float4 _Origin;
+		uniform half _Distance;
+		uniform half _Frequency;
+		uniform half _Intensity;
+		uniform half _Width;
 		uniform float	_SpecWidth;
-		uniform float4 	_SpecCol;
+		uniform float4 _SpecCol;
 		uniform half 	_Shine;
 		uniform float3	reflection;
 		uniform float	_MaxDistance;
-        uniform float   _SpeedX;
-        uniform float   _SpeedY;
-        uniform float   _Scale;
-        uniform float   _TileX;
-        uniform float   _TileY;
+		uniform float _SpeedX;
+		//uniform float _SpeedY;
+		uniform float _ReverbIntensity;
+		//uniform float _Scale;
+		//uniform float _TileX;
+		//uniform float _TileY;
 
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
@@ -96,10 +95,6 @@
 			/*START Bumpmap calculations*/
 			//Load bump texture
 			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
-			
-			//Distort
-			encodedTex.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
-			encodedTex.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
 			
 			//Create bumpcoordinates for reflection?
 			float3 localCoords = float3(
@@ -154,20 +149,29 @@
 			float4 vertexToPulse = _Origin - fIn.worldPos;	
 			float4 specularDirection  = normalize(vertexToPulse);
 			float specLightIntensity = pulseFade 
-									 * _Intensity
-									 * (1 - saturate(abs((_Distance - _SpecWidth) - pulseDistance) / _SpecWidth));
+									* _Intensity
+									* (1 - saturate(abs((_Distance - (_SpecWidth / 2)) - pulseDistance) / _SpecWidth));
 
 			
 			float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
-								 * specLightIntensity
-								 * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
-
+									* specLightIntensity
+									* pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
 			/* END specular light calculations */
 
-			//Compile all light calculations
-			float4 light = diffuseLight + specularLight + pulseLight;
+			// /* START reverb simulation calculations */
+			// float distortedX = sin((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
+			// float distortedY = cos(encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
+			float reverbIntensity = pulseFade 
+										* _ReverbIntensity
+										* (1 - saturate(abs((_Distance - (_SpecWidth / 2)) - pulseDistance) / _SpecWidth));
+			float4 reverbLight = reverbIntensity 
+										* sin(_Time.g * 0.1 * fIn.vertex.x) 
+										* cos(_Time.g * 0.1 * fIn.vertex.y);
+			/* END reverb simulation calculations */
+
+			// combine all light calculations
+			float4 light = diffuseLight + specularLight + pulseLight + reverbLight;
 			
-			/*Change to this for original*/
 			return tex2D(_MainTex, fIn.uv.xy) * light;
 		}
 
