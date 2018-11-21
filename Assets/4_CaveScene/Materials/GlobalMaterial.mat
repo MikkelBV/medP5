@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: GlobalMaterial
+  m_Shader: {fileID: 4800000, guid: 1758f04f7487ae0438134ef75b212341, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Bump:
+        m_Texture: {fileID: 2800000, guid: bcb1afdcd5fece941a47c0fdf59083cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: be039686eef59614c82eaa9b6e8037fe, type: 3}
+        m_Scale: {x: 0, y: 0}
+        m_Offset: {x: 0, y: 0}
+    - _EmiTex:
+        m_Texture: {fileID: 2800000, guid: a3e975c584c18fa45a8cedceefc1d62d, type: 3}
+        m_Scale: {x: 2.43, y: 2.05}
+        m_Offset: {x: -0.02, y: 0.3}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 8c20899061e0d534ba0fbc79b31a3f16, type: 3}
+        m_Scale: {x: 0, y: 0}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 4edb7a3479c57c14090f2320f1cb8fec, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReverbBumpMap:
+        m_Texture: {fileID: 2800000, guid: be039686eef59614c82eaa9b6e8037fe, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Distance: 1.36
+    - _Frequency: 50
+    - _HiY: -2.19
+    - _Intensity: 0
+    - _LoY: 2
+    - _MaxDistance: 100
+    - _MaxHeight: -0.019
+    - _Mitigation: 2.7
+    - _PDistance: 7.170069
+    - _PEdgeSoftness: 5
+    - _PFadeDistance: 5
+    - _RimOn: 0.41791046
+    - _RimPower: 5.425373
+    - _Scale: 0.2
+    - _Shine: 10
+    - _SpecWidth: 10000
+    - _SpeedX: 5
+    - _SpeedY: 5
+    - _Threshold: 10
+    - _TileX: 1
+    - _TileY: 1
+    - _Width: 5
+    m_Colors:
+    - _Color: {r: 1, g: 0, b: 0.12061596, a: 1}
+    - _EmissionColor: {r: 0.3066733, g: 1, b: 0, a: 1}
+    - _HiY: {r: 0, g: 0, b: 0, a: 0}
+    - _Origin: {r: 0, g: 0, b: 0, a: 0}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecCol: {r: 0.9716981, g: 0.0045834924, b: 0.68782234, a: 1}

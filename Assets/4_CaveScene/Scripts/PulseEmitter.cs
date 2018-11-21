@@ -7,13 +7,15 @@ public class PulseEmitter : MonoBehaviour {
 	public static float fadeDistance;
 	public static float edgeSoftness;
 	public List<Vector3> rays;
-
+	public AudioClip AudioClip;
+	AudioSource audioSource;
 	public int speed = 25;
 	public float space;
 
 	void Start () {
 		fadeDistance = 5f;
 		edgeSoftness = 5f;
+		audioSource = GetComponent<AudioSource>();
 	}
 
 	void Update () {
@@ -21,10 +23,12 @@ public class PulseEmitter : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown(0)){
 			EmitSound(100f, 8f);
+			audioSource.PlayOneShot(AudioClip, 1F);
+            audioSource.PlayDelayed(44100);
 		} else if (Input.GetMouseButtonDown(1)) {
 			EmitSound(20f, 2f);
 		}
-
+ 
 		RayCasting();
 	}
 

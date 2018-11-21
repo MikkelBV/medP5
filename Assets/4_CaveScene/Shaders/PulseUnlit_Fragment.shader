@@ -150,7 +150,8 @@
 									  * _Intensity
 									  * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 
-			float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
+			//float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
+			float4 pulseLight = float4(_SpecCol.r - normDistance, _SpecCol.g-normDistance, _SpecCol.b, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
 			
 			/* START specular light calculations */
@@ -163,8 +164,8 @@
 			if (distance(fIn.worldPos, _Origin) > _Distance) {
 				specLightIntensity = 0;
 			}
-			
-			float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
+			//float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
+			float4 specularLight = float4(_SpecCol.r - normDistance, _SpecCol.g - normDistance, _SpecCol.b - normDistance, 1)
 								 * specLightIntensity
 								 * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
 
