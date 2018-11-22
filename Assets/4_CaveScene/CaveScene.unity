@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -126,7 +126,7 @@ MeshCollider:
   m_GameObject: {fileID: 207451993}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
@@ -665,7 +665,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 5d9e027c08e7c3342b0749264497ba51, type: 2}
+  - {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -898,7 +898,7 @@ MonoBehaviour:
   - {x: 1, y: 1, z: 0}
   - {x: 1, y: 1, z: 1}
   AudioClip: {fileID: 8300000, guid: 8115a1a6f0c944c4a9519fb771e82162, type: 3}
-  speed: 348
+  speed: 150
   space: 0
 --- !u!114 &1929207473
 MonoBehaviour:
@@ -1094,7 +1094,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 5d9e027c08e7c3342b0749264497ba51, type: 2}
+  - {fileID: 2100000, guid: 978532d8a8275154597681d32eb6d820, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

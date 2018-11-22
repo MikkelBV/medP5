@@ -8,30 +8,29 @@
 		_Origin("PulseOrigin", Vector) = (0, 0, 0, 0)
 		_Distance("PulseDistance", Float) = 0
 		_MaxDistance("MaxDistance", Float) = 100
-
-			[HideInInspector]
-			_Frequency("Frequency", Range(0, 50)) = 50
-			[HideInInspector]
-			_Intensity("Intensity", Range(0, 10)) = 1
-			
 		_Width("PulseWidth", Float) = 5
 
 		[Header(Specular Settings)]
 		_SpecWidth("SpecularWidth", Float) = 5
-		_SpecCol("Specular Color", Color) = (1.0,0.0,0.0,1.0)
+		_SpecCol("Specular Color", Color) = (1, 0, 0, 1)
 		_Shine("Shine",Float) = 10
 
 		[Header(Distortion Settings)]
-        _SpeedX("SpeedX", float)=3.0
-        _SpeedY("SpeedY", float)=3.0
-        _Scale("Scale", range(0.005, 0.2))=0.03
-				_ReverbBumpMap("Normal map", 2D)= "bump" {}
+		_SpeedX("SpeedX", Float) = 3.0
+		_SpeedY("SpeedY", Float) = 3.0
+		_Scale("Scale", Range(0.005, 0.2)) = 0.03
+		_ReverbBumpMap("Reverb Normal map", 2D)= "bump" {}
 
-
-			[HideInInspector]
-        	_TileX("TileX", float)=5
-			[HideInInspector]
-        	_TileY("TileY", float)=5
+		[HideInInspector]
+		_Frequency("Frequency", Range(0, 50)) = 50
+		[HideInInspector]
+		_Intensity("Intensity", Range(0, 10)) = 1
+		[HideInInspector]
+		_TileX("TileX", Float) = 5
+		[HideInInspector]
+		_TileY("TileY", Float) = 5
+		[HideInInspector]
+		_EnvironmentSpace("Environment Space", Float) = 1
 	}
 	CGINCLUDE
 		#include "UnityCG.cginc"
@@ -47,44 +46,41 @@
 			float4 uv : TEXCOORD0;
 			float4 worldPos : TEXCOORD1;
 			float3 tangentWorld : TEXCOORD2;  
-         	float3 normalWorld : TEXCOORD3;
-        	float3 binormalWorld : TEXCOORD4;
+			float3 normalWorld : TEXCOORD3;
+			float3 binormalWorld : TEXCOORD4;
 			float3 normal : NORMAL;
 		};
 
 		sampler2D _MainTex;
 		sampler2D _ReverbBumpMap;
 		sampler2D _BumpMap;
-		uniform float4  _BumpMap_ST;
-		uniform float4  _MainTex_ST;
-		uniform float4	_LightColor0; 
-		uniform float4 	_Origin;
-		uniform half 	_Distance;
-		uniform half 	_Frequency;
-		uniform half 	_Intensity;
-		uniform half 	_Width;
+		uniform float4 _BumpMap_ST;
+		uniform float4 _MainTex_ST;
+		uniform float4 _LightColor0; 
+		uniform float4 _Origin;
+		uniform half _Distance;
+		uniform half _Frequency;
+		uniform half _Intensity;
+		uniform half _Width;
 		uniform float	_SpecWidth;
-		uniform float4 	_SpecCol;
-		uniform half 	_Shine;
-		uniform float3	reflection;
+		uniform float4 _SpecCol;
+		uniform half _Shine;
 		uniform float	_MaxDistance;
-        uniform float   _SpeedX;
-        uniform float   _SpeedY;
-        uniform float   _Scale;
-        uniform float   _TileX;
-        uniform float   _TileY;
+		uniform float _SpeedX;
+		uniform float _SpeedY;
+		uniform float _Scale;
+		uniform float _TileX;
+		uniform float _TileY;
+		uniform float _EnvironmentSpace;
 
 		v2f vert (appdata vIn) {
 			float4x4 modelMatrix = unity_ObjectToWorld;
 			float4x4 modelMatrixInverse = unity_WorldToObject;
 
 			v2f output;
-			output.tangentWorld =
-					 normalize(mul(modelMatrix, float4(vIn.tangent.xyz,0.0)).xyz);
-			output.normalWorld =
-					normalize(mul(float4(vIn.normal, 0.0),modelMatrixInverse).xyz);
-			output.binormalWorld =
-					normalize(cross(output.normalWorld,output.tangentWorld) * vIn.tangent.w);
+			output.tangentWorld = normalize(mul(modelMatrix, float4(vIn.tangent.xyz,0.0)).xyz);
+			output.normalWorld = normalize(mul(float4(vIn.normal, 0.0),modelMatrixInverse).xyz);
+			output.binormalWorld = normalize(cross(output.normalWorld,output.tangentWorld) * vIn.tangent.w);
 
 			output.normal = normalize(mul(vIn.normal, modelMatrix));
 			output.worldPos	= mul(modelMatrix, vIn.vertex);	
@@ -100,11 +96,7 @@
 			//Load bump texture
 			float4 encodedTex = tex2D(_BumpMap, fIn.uv.xy);
 			
-			//Distort
-			//encodedTex.x += sin ((encodedTex.x + encodedTex.y) *_TileX + _Time.g * _SpeedX) * _Scale;	
-			//encodedTex.y += cos (encodedTex.y * _TileY + _Time.g * _SpeedY) * _Scale;
-			
-			//Create bumpcoordinates for reflection?
+			//Create bumpcoordinates for reflection
 			float3 localCoords = float3(
 				2.0 * encodedTex.a - 1.0,
 				2.0 * encodedTex.g - 1.0, 
@@ -150,8 +142,8 @@
 									  * _Intensity
 									  * (1 - saturate(abs(_Distance - pulseDistance) / _Width));
 
-			//float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
-			float4 pulseLight = float4(_SpecCol.r - normDistance, _SpecCol.g-normDistance, _SpecCol.b, 1) * pulseLightIntensity;
+			float4 pulseLight = float4(1 - normDistance, 0, normDistance, 1) * pulseLightIntensity;
+			//float4 pulseLight = float4(_SpecCol.r - normDistance, _SpecCol.g-normDistance, _SpecCol.b, 1) * pulseLightIntensity;
 			/* END pulse light calculations */
 			
 			/* START specular light calculations */
@@ -164,8 +156,8 @@
 			if (distance(fIn.worldPos, _Origin) > _Distance) {
 				specLightIntensity = 0;
 			}
-			//float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
-			float4 specularLight = float4(_SpecCol.r - normDistance, _SpecCol.g - normDistance, _SpecCol.b - normDistance, 1)
+			float4 specularLight = float4(1 - normDistance, 0, normDistance, 1)
+			//float4 specularLight = float4(_SpecCol.r - normDistance, 1 - normDistance, _SpecCol.b - normDistance, 1)
 								 * specLightIntensity
 								 * pow(max(0, dot(reflect(-specularDirection, normalDirection), viewDirection)), _Shine);
 
@@ -182,8 +174,8 @@
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
 			normalDirection = normalize(mul(localCoords, local2World));
-			float reverbIntensity = saturate(1 - (_Distance / (_MaxDistance * 2))) 
-									 * (_Intensity / 10)
+			float reverbIntensity = saturate(1 - (_Distance / (_MaxDistance * 4))) 
+									 * ((_Intensity / 150) *_EnvironmentSpace)
 									 * (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
 			if (distance(fIn.worldPos, _Origin) > _Distance) {
 				reverbIntensity = 0;
