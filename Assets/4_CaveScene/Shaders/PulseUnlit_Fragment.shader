@@ -174,8 +174,8 @@
 			);
 			localCoords.z = sqrt(1.0 - dot(localCoords, localCoords));
 			normalDirection = normalize(mul(localCoords, local2World));
-			float reverbIntensity = saturate(1 - (_Distance / (_MaxDistance * 4))) 
-									 * ((_Intensity / 150) *_EnvironmentSpace)
+			float reverbIntensity = saturate(1 - (_Distance / (_MaxDistance * 6))) 
+									 * ((_Intensity / 300) *_EnvironmentSpace)
 									 * (1 - saturate(abs(_Distance - pulseDistance) / _SpecWidth));
 			if (distance(fIn.worldPos, _Origin) > _Distance) {
 				reverbIntensity = 0;

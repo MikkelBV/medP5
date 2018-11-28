@@ -5,12 +5,13 @@ using System.Collections.Generic;
 public class PulseEmitter : MonoBehaviour {
 	public static float distance = 0.0f;
 	public List<Vector3> rays;
-	public AudioClip AudioClip;
 	AudioSource audioSource;
 	public int speed = 25;
 	public float space;
-
+    //AudioClip audioClip;
+    
 	private PulseVisualizer[] visualisers;
+    private bool actionButtonDown = false;
 
 	void Start () {
 		audioSource = GetComponent<AudioSource>();
@@ -19,17 +20,21 @@ public class PulseEmitter : MonoBehaviour {
 	}
 
 	void Update () {
+        OVRInput.Update();
 		distance += speed * Time.deltaTime;
 
-		if (Input.GetMouseButtonDown(0)){
-			EmitSound(100f, 8f);
-			audioSource.PlayOneShot(AudioClip, 1F);
-			audioSource.PlayDelayed(44100);
-		} else if (Input.GetMouseButtonDown(1)) {
-			EmitSound(20f, 2f);
-		}
- 
-		RayCasting();
+        var buttonPressed = OVRInput.Get(OVRInput.Button.One);
+        if (buttonPressed && !actionButtonDown)
+        {
+            EmitSound(100f, 8f);
+            audioSource.Play();
+			//audioSource.PlayOneShot(audioClip, 1F);
+			//audioSource.PlayDelayed(44100);
+        }
+
+        actionButtonDown = buttonPressed;
+        
+        RayCasting();
 	}
 
 	void EmitSound(float freq, float intensity) {
