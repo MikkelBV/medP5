@@ -168,6 +168,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114389026231341648, guid: c6906abc7e5aad24bb24ca5da82712cc,
+        type: 2}
+      propertyPath: maxDistance
+      value: 180
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
   m_IsPrefabAsset: 0
@@ -1093,6 +1098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2a24e512038bb49a2a5c9808bad02a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDistance: 180
   rays:
   - {x: 1, y: 0, z: 0}
   - {x: 0, y: 1, z: 0}
@@ -1217,7 +1223,7 @@ MonoBehaviour:
   airAbsorption: 0
   dipoleWeight: 0
   dipolePower: 0
-  occlusionMode: 0
+  occlusionMode: 2
   occlusionMethod: 0
   sourceRadius: 1
   directMixLevel: 1

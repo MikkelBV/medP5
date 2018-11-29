@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PulseEmitter : MonoBehaviour {
 	public static float distance = 0.0f;
+
+	public int maxDistance = 0;
 	public List<Vector3> rays;
 	public int speed = 25;
 	public float space;
@@ -16,7 +18,7 @@ public class PulseEmitter : MonoBehaviour {
 	void Start () {
 		audioSource = GetComponent<AudioSource>();
 		visualisers = Object.FindObjectsOfType<PulseVisualizer>();
-		Debug.Log(visualisers.Length);
+		distance = maxDistance;
 	}
 
 	void Update () {
@@ -28,7 +30,9 @@ public class PulseEmitter : MonoBehaviour {
 		else buttonPressed = Input.GetMouseButtonDown(0);
 
         if (buttonPressed && !actionButtonDown) {
-            EmitSound(100f, 8f);
+			if (distance > maxDistance) {
+            	EmitSound(100f, 8f);
+			}
             audioSource.Play();
         }
 
