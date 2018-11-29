@@ -31,4 +31,21 @@ public class CollectObject : MonoBehaviour {
 			particles.Emit(5);
 		}
 	}
+
+	void OnControllerColliderHit(ControllerColliderHit otherC){
+		if (otherC.gameObject.tag == "Sphere"){
+			spheres+=1;
+			otherC.gameObject.SetActive(false);
+			Debug.Log(spheres +":"+ cubes);
+			particles.Emit(5);
+		}		
+		if (otherC.gameObject.tag == "Cube"){
+			cubes+=1;
+			otherC.gameObject.SetActive(false);
+			Debug.Log(spheres +":"+ cubes);
+			particles.Emit(5);
+		}
+	}
+
+
 }
