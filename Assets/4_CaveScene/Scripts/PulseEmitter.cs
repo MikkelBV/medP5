@@ -5,12 +5,12 @@ using System.Collections.Generic;
 public class PulseEmitter : MonoBehaviour {
 	public static float distance = 0.0f;
 	public List<Vector3> rays;
-	AudioSource audioSource;
 	public int speed = 25;
 	public float space;
-    //AudioClip audioClip;
+	public bool isVR;
     
 	private PulseVisualizer[] visualisers;
+	private AudioSource audioSource;
     private bool actionButtonDown = false;
 
 	void Start () {
@@ -23,17 +23,16 @@ public class PulseEmitter : MonoBehaviour {
         OVRInput.Update();
 		distance += speed * Time.deltaTime;
 
-        var buttonPressed = OVRInput.Get(OVRInput.Button.One);
-        if (buttonPressed && !actionButtonDown)
-        {
+        bool buttonPressed;
+		if (isVR) buttonPressed = OVRInput.Get(OVRInput.Button.One);
+		else buttonPressed = Input.GetMouseButtonDown(0);
+
+        if (buttonPressed && !actionButtonDown) {
             EmitSound(100f, 8f);
             audioSource.Play();
-			//audioSource.PlayOneShot(audioClip, 1F);
-			//audioSource.PlayDelayed(44100);
         }
 
         actionButtonDown = buttonPressed;
-        
         RayCasting();
 	}
 
@@ -63,10 +62,6 @@ public class PulseEmitter : MonoBehaviour {
 				Debug.DrawRay(transform.position, ray * 10, Color.red);
 			}
 		}
-	
-		// if (raySum <= 0) {
-		// 	return;
-		// }
 
 		space = raySum / rays.Count;
 
