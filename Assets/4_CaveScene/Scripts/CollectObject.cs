@@ -16,33 +16,35 @@ public class CollectObject : MonoBehaviour {
 	void Update () {
 	}
 
+	//"Player" gameobjekt collision
 	void OnCollisionEnter(Collision other)
 	{
 		if (other.gameObject.tag == "Sphere"){
 			spheres+=1;
-			other.gameObject.SetActive(false);
 			Debug.Log(spheres +":"+ cubes);
+			other.gameObject.SetActive(false);
 			particles.Emit(5);
 		}		
 		if (other.gameObject.tag == "Cube"){
 			cubes+=1;
-			other.gameObject.SetActive(false);
 			Debug.Log(spheres +":"+ cubes);
+			other.gameObject.SetActive(false);
 			particles.Emit(5);
 		}
 	}
 
+	//"OVRPlayerController gameobject collision
 	void OnControllerColliderHit(ControllerColliderHit otherC){
 		if (otherC.gameObject.tag == "Sphere"){
 			spheres+=1;
-			otherC.gameObject.SetActive(false);
 			Debug.Log(spheres +":"+ cubes);
+			otherC.gameObject.SetActive(false);
 			particles.Emit(5);
 		}		
 		if (otherC.gameObject.tag == "Cube"){
 			cubes+=1;
-			otherC.gameObject.SetActive(false);
 			Debug.Log(spheres +":"+ cubes);
+			otherC.gameObject.SetActive(false);
 			particles.Emit(5);
 		}
 	}
