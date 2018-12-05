@@ -13,35 +13,53 @@ public class PulseEmitter : MonoBehaviour {
     
 	private PulseVisualizer[] visualisers;
 	private AudioSource audioSource;
-    private bool actionButtonDown = false;
+	private bool actionButtonDown = false;
+
+	private CsvLogger<Vector3> positionLogger = new CsvLogger<Vector3>(true, "path", "x,y,z", vec => vec.x + "," + vec.y + "," + vec.z);
+	private CsvLogger<Vector4> clickLogger = new CsvLogger<Vector4>("clicks", "x,y,z,t", vec => vec.x + "," + vec.y + "," + vec.z + "," + vec.w);
 
 	void Start () {
 		audioSource = GetComponent<AudioSource>();
 		visualisers = Object.FindObjectsOfType<PulseVisualizer>();
-		distance = maxDistance;
+		distance = maxDistance; 
+
+		positionLogger.StartAsyncLogging();
+	}
+
+	void OnApplicationQuit() {
+		positionLogger.PrintAndSave();
+		clickLogger.PrintAndSave();
 	}
 
 	void Update () {
-        OVRInput.Update();
+		OVRInput.Update();
 		distance += speed * Time.deltaTime;
 
-        bool buttonPressed;
-		if (isVR) buttonPressed = OVRInput.Get(OVRInput.Button.One);
-		else buttonPressed = Input.GetMouseButtonDown(0);
+		bool buttonPressed;
 
-        if (buttonPressed && !actionButtonDown) {
-			if (distance > maxDistance) {
-            	EmitSound(100f, 8f);
-			}
-            audioSource.Play();
-        }
+		if (isVR) {
+			buttonPressed = OVRInput.Get(OVRInput.Button.One);
+		} else {
+			buttonPressed = Input.GetMouseButtonDown(0);
+		}
 
-        actionButtonDown = buttonPressed;
-        RayCasting();
+		if (buttonPressed && !actionButtonDown && distance > maxDistance) {
+				EmitSound(100f, 8f);
+				audioSource.Play();
+		}
+
+		actionButtonDown = buttonPressed;
+		RayCasting();
+		positionLogger.Log(transform.position);
 	}
 
 	void EmitSound(float freq, float intensity) {
-		var pulseOrigin = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0);
+		var pulseOrigin = new Vector4(
+			transform.position.x, 
+			transform.position.y, 
+			transform.position.z, 
+			1
+		);
 
 		foreach (var visualizer in visualisers) {
 			visualizer.thisRenderer.material.SetVector("_Origin", pulseOrigin);
@@ -50,18 +68,19 @@ public class PulseEmitter : MonoBehaviour {
 		}
 
 		distance = 0.0f;
+
+		pulseOrigin.w = Time.realtimeSinceStartup;
+		clickLogger.Log(pulseOrigin);
 	}
 
 	void RayCasting () {
-		RaycastHit hit; 
+		RaycastHit collision; 
 		float raySum = 0;
 
 		foreach (var ray in rays){
-			if(Physics.Raycast(transform.position, ray, out hit)){
-				var rayDistance = hit.distance;
-				raySum += rayDistance;
-
-				Debug.DrawRay(transform.position, ray * rayDistance, Color.green);
+			if(Physics.Raycast(transform.position, ray, out collision)) {
+				raySum += collision.distance;
+				Debug.DrawRay(transform.position, ray * collision.distance, Color.green);
 			} else {
 				Debug.DrawRay(transform.position, ray * 10, Color.red);
 			}
