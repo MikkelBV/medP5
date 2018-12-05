@@ -7,6 +7,9 @@ TagManager:
   - SoundParticle
   - Environment
   - Plant
+  - Collectable
+  - Sphere
+  - Cube
   layers:
   - Default
   - TransparentFX
