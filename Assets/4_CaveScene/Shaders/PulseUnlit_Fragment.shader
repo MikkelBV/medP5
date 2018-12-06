@@ -58,13 +58,13 @@
 		uniform float4 _MainTex_ST;
 		uniform float4 _LightColor0; 
 		uniform float4 _Origin;
-		uniform half _Distance;
-		uniform half _Frequency;
-		uniform half _Intensity;
-		uniform half _Width;
+		uniform float _Distance;
+		uniform float _Frequency;
+		uniform float _Intensity;
+		uniform float _Width;
 		uniform float	_SpecWidth;
 		uniform float4 _SpecCol;
-		uniform half _Shine;
+		uniform float _Shine;
 		uniform float	_MaxDistance;
 		uniform float _SpeedX;
 		uniform float _SpeedY;
