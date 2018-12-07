@@ -1,4 +1,4 @@
-﻿Shader "Unlit/PulseUnlit_Fragment" {
+﻿Shader "Unlit/PulseShader" {
 	Properties {
 		[Header(Textures)]
 		_MainTex ("Main Texture", 2D) = "white" {}
