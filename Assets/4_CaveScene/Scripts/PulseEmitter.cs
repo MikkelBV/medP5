@@ -8,7 +8,6 @@ public class PulseEmitter : MonoBehaviour {
 	public int maxDistance = 0;
 	public List<Vector3> rays;
 	public int speed = 25;
-	public float space;
 	public bool isVR;
     
 	private PulseVisualizer[] visualisers;
@@ -73,7 +72,7 @@ public class PulseEmitter : MonoBehaviour {
 		clickLogger.Log(pulseOrigin);
 	}
 
-	void RayCasting () {
+	void RayCasting() {
 		RaycastHit collision; 
 		float raySum = 0;
 
@@ -86,7 +85,7 @@ public class PulseEmitter : MonoBehaviour {
 			}
 		}
 
-		space = raySum / rays.Count;
+		var space = raySum / rays.Count;
 
 		foreach (var visualizer in visualisers) {
 			visualizer.thisRenderer.material.SetFloat("_EnvironmentSpace", space);
