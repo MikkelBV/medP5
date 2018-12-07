@@ -44,7 +44,7 @@ public class PulseEmitter : MonoBehaviour {
 		}
 
 		if (buttonPressed && !actionButtonDown && distance > maxDistance) {
-				EmitSound(100f, 8f);
+				EmitSound(200f, 5f);
 				audioSource.Play();
 		}
 

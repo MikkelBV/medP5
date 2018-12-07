@@ -25,9 +25,9 @@
 		_Frequency("Frequency", Range(0, 50)) = 50
 		[HideInInspector]
 		_Intensity("Intensity", Range(0, 10)) = 1
-		[HideInInspector]
+		
 		_TileX("TileX", Float) = 5
-		[HideInInspector]
+		
 		_TileY("TileY", Float) = 5
 		[HideInInspector]
 		_EnvironmentSpace("Environment Space", Float) = 1
