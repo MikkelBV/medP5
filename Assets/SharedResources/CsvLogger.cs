@@ -57,6 +57,8 @@ public class CsvLogger<T> {
 	}
 
 	public void StartAsyncLogging() {
+		if (!logAsync) return;
+
 		datalogger = new Thread(LogToFileAsync);
 		datalogger.Start();
 	}

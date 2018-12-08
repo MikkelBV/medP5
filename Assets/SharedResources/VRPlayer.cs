@@ -23,7 +23,7 @@ public class VRPlayer : MonoBehaviour {
 					transform.position.x,
 					transform.position.y,
 					transform.position.z,
-					Time.realtimeSinceStartup
+					Time.time
 				);
 
 				collisionLogger.Log(point);

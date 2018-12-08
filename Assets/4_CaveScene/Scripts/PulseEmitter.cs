@@ -68,7 +68,7 @@ public class PulseEmitter : MonoBehaviour {
 
 		distance = 0.0f;
 
-		pulseOrigin.w = Time.realtimeSinceStartup;
+		pulseOrigin.w = Time.time;
 		clickLogger.Log(pulseOrigin);
 	}
 
