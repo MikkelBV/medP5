@@ -24,7 +24,7 @@ public class CsvLogger<T> {
 		fileHeader = _fileHeader;
 
 		string date = DateTimeOffset.Now.ToString("s").Replace(':', '_');
-		filePath = fileName + "_" + date + ".csv";
+		filePath = "./Logs/" + fileName + "_" + date + ".csv";
 
 		if (_logAsync) {
 			logAsync = true;
