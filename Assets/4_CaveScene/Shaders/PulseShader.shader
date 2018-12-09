@@ -15,7 +15,7 @@
 		_SpecCol("Specular Color", Color) = (1, 0, 0, 1)
 		_Shine("Shine",Float) = 10
 
-		[Header(Distortion Settings)]
+		[Header(Reverb Settings)]
 		_SpeedX("SpeedX", Float) = 3.0
 		_SpeedY("SpeedY", Float) = 3.0
 		_Scale("Scale", Range(0.005, 0.2)) = 0.03
@@ -25,9 +25,9 @@
 		_Frequency("Frequency", Range(0, 50)) = 50
 		[HideInInspector]
 		_Intensity("Intensity", Range(0, 10)) = 1
-		
+		[HideInInspector]
 		_TileX("TileX", Float) = 5
-		
+		[HideInInspector]
 		_TileY("TileY", Float) = 5
 		[HideInInspector]
 		_EnvironmentSpace("Environment Space", Float) = 1
@@ -83,8 +83,8 @@
 			output.binormalWorld = normalize(cross(output.normalWorld,output.tangentWorld) * vIn.tangent.w);
 
 			output.normal = normalize(mul(vIn.normal, modelMatrix));
-			output.worldPos	= mul(modelMatrix, vIn.vertex);	
 			output.vertex = UnityObjectToClipPos(vIn.vertex);
+			output.worldPos	= mul(modelMatrix, vIn.vertex);	
 			output.uv = vIn.uv;
 			return output;
 		}
@@ -114,16 +114,15 @@
 			/*END Bumpmap calculations*/
 
 			/* START diffuse light calculations */
-			// for DIRECTIONAL LIGHT, _WorldSpaceLightPos0.w will be 0, for other lights it is 1
-			// https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
-			float3 lightDirection;
-			float attenuation; // intensity of light, e.g. point light is more attenuated when far away
+			float3 lightDirection; //direction of the light
+			float attenuation; //intensity of light
 
+			//if directional light
 			if (_WorldSpaceLightPos0.w == 0) {
 				attenuation = 1.0;
 				lightDirection = normalize(_WorldSpaceLightPos0.xyz);
 			} else {
-				// when working with anything other than directional light, we also need to account for the distance to the light
+				//else attenuated light - needs to account for distance
 				float3 vertexToLightSource = _WorldSpaceLightPos0 - fIn.worldPos;
 				attenuation = 1.0 / length(vertexToLightSource);
 				lightDirection = normalize(vertexToLightSource);
