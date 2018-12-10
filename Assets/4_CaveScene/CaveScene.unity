@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -139,15 +139,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4616051416283068, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -209.3
+      value: 281
       objectReference: {fileID: 0}
     - target: {fileID: 4616051416283068, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 31.2
+      value: -14.7
       objectReference: {fileID: 0}
     - target: {fileID: 4616051416283068, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 71.1
+      value: -129
       objectReference: {fileID: 0}
     - target: {fileID: 4616051416283068, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
       propertyPath: m_LocalRotation.x
@@ -354,6 +354,21 @@ Prefab:
       propertyPath: moveSpeed
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 82812976438163258, guid: c6906abc7e5aad24bb24ca5da82712cc,
+        type: 2}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 378ca0bce3298e141aa7cf3d64c4e5f6, type: 3}
+    - target: {fileID: 82812976438163258, guid: c6906abc7e5aad24bb24ca5da82712cc,
+        type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114072531400874290, guid: c6906abc7e5aad24bb24ca5da82712cc,
+        type: 2}
+      propertyPath: indirectMixLevel
+      value: 2.42
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6906abc7e5aad24bb24ca5da82712cc, type: 2}
   m_IsPrefabAsset: 0
@@ -527,22 +542,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1077305916 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1388775534814414, guid: c6906abc7e5aad24bb24ca5da82712cc,
-    type: 2}
-  m_PrefabInternal: {fileID: 130910697}
---- !u!114 &1077305927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1077305916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e4e38ce0670f14484bd11d9e14e389, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1305680798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,7 +1158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1978256316
 Light:
   m_ObjectHideFlags: 0
