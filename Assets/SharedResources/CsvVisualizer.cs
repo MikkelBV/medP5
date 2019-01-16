@@ -42,11 +42,17 @@ public class CsvVisualizer : MonoBehaviour {
 	}
 
 	void Update () {
+		float distance = 0;
+
 		for (int i = 0; i < vectors.Count - 1; i++) {
 			var from = vectors[i];
 			var to = vectors[i + 1];
 
+			distance += (to - from).magnitude;
+
 			Debug.DrawLine(from, to);
 		}
+
+		Debug.Log("distance: " + distance);
 	}
 }
